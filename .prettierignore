@@ -1,0 +1,32 @@
+# Ignore all files in the build and dist directories
+build/
+dist/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore specific files
+package-lock.json
+yarn.lock
+
+# Ignore all minified files
+*.min.js
+*.min.css
+
+# Ignore specific file types
+*.log
+*.svg
+
+# Ignore coverage reports
+coverage/
+
+# Ignore all files in a specific directory
+public/
+
+# Ignore all markdown files
+
+*.tsbuildinfo
+
+.expo/
+
+routeTree.gen.ts
