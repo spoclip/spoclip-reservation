@@ -6,6 +6,7 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import importPlugin from 'eslint-plugin-import';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -16,6 +17,7 @@ export default defineConfig([
       tseslint.configs.recommended,
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
+      pluginQuery.configs.recommended,
     ],
     languageOptions: {
       ecmaVersion: 2020,
@@ -24,6 +26,12 @@ export default defineConfig([
   },
 
   eslintConfigPrettier,
+
+  {
+    rules: {
+      'no-console': 'warn',
+    },
+  },
 
   {
     extends: [

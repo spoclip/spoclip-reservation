@@ -1,0 +1,73 @@
+:root,
+.light,
+.light-theme {
+  --green-1: #fbfefa;
+  --green-2: #f5fbf4;
+  --green-3: #e8f7e5;
+  --green-4: #d9f2d5;
+  --green-5: #c7eac1;
+  --green-6: #b0e0a8;
+  --green-7: #91d187;
+  --green-8: #63bc55;
+  --green-9: #3ca62b;
+  --green-10: #329821;
+  --green-11: #238012;
+  --green-12: #1f3d1b;
+
+  --green-a1: #33cc0005;
+  --green-a2: #18a3000b;
+  --green-a3: #1eb1001a;
+  --green-a4: #19b1002a;
+  --green-a5: #19a9003e;
+  --green-a6: #18a50057;
+  --green-a7: #169e0078;
+  --green-a8: #159b00aa;
+  --green-a9: #159400d4;
+  --green-a10: #148900de;
+  --green-a11: #127600ed;
+  --green-a12: #052600e4;
+
+  --green-contrast: #fff;
+  --green-surface: #f3faf1cc;
+  --green-indicator: #3ca62b;
+  --green-track: #3ca62b;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    :root,
+    .light,
+    .light-theme {
+      --green-1: oklch(99.4% 0.0068 141.1);
+      --green-2: oklch(98.2% 0.0116 141.1);
+      --green-3: oklch(96.1% 0.0293 141.1);
+      --green-4: oklch(93.4% 0.0468 141.1);
+      --green-5: oklch(90.1% 0.067 141.1);
+      --green-6: oklch(85.8% 0.0904 141.1);
+      --green-7: oklch(79.8% 0.1203 141.1);
+      --green-8: oklch(71.6% 0.1646 141.1);
+      --green-9: oklch(64% 0.1859 141.1);
+      --green-10: oklch(59.9% 0.1793 141.1);
+      --green-11: oklch(52.7% 0.1641 141.1);
+      --green-12: oklch(32.7% 0.0677 141.1);
+
+      --green-a1: color(display-p3 0.4118 0.8039 0.0196 / 0.02);
+      --green-a2: color(display-p3 0.1216 0.6118 0.0235 / 0.04);
+      --green-a3: color(display-p3 0.2078 0.6863 0.0118 / 0.099);
+      --green-a4: color(display-p3 0.1765 0.651 0.0039 / 0.157);
+      --green-a5: color(display-p3 0.1725 0.6314 0.0039 / 0.232);
+      --green-a6: color(display-p3 0.1608 0.6118 0.0039 / 0.322);
+      --green-a7: color(display-p3 0.1529 0.5765 0.0039 / 0.444);
+      --green-a8: color(display-p3 0.149 0.5608 0 / 0.616);
+      --green-a9: color(display-p3 0.1451 0.5255 0 / 0.753);
+      --green-a10: color(display-p3 0.1333 0.4784 0 / 0.789);
+      --green-a11: color(display-p3 0.1176 0.4 0 / 0.844);
+      --green-a12: color(display-p3 0.0314 0.1294 0 / 0.879);
+
+      --green-contrast: #fff;
+      --green-surface: color(display-p3 0.9569 0.9804 0.9451 / 0.8);
+      --green-indicator: oklch(64% 0.1859 141.1);
+      --green-track: oklch(64% 0.1859 141.1);
+    }
+  }
+}
