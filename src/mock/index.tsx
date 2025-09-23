@@ -1,3 +1,6 @@
 export const MOCK_RECORDING_INTERVAL_IN_MINUTES = 60;
 export const MOCK_OPERAION_START_HOUR = 10;
 export const MOCK_OPERAION_END_HOUR = 23;
+
+export const MOCK_GYM_UUID = '0198fbbc-5741-7022-ad19-c95aa543db30';
+export const MOCK_COURT_UUID = '0198fbbc-698b-7082-a4e5-4f10d78c700a';
