@@ -5,7 +5,7 @@ import {
   createRecordingFormSchema,
   type CreateRecordingFormSchema,
 } from '@/routes/(home)/-types/recording';
-import useCreateRecordingQuery from '@/services/recording/query';
+import { useCreateRecordingQuery } from '@/services/recording/query';
 import type { CreateRecordingRequest } from '@/services/recording/types';
 import {
   getCurrentRecordingEndDate,

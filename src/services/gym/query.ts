@@ -1,4 +1,4 @@
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 import type {
   GetCourtRequest,
   GetCourtResponse,

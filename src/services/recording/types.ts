@@ -1,3 +1,5 @@
+import type { ApiResponse } from '@/types/api';
+
 export type CreateRecordingRequest = {
   date: string;
   startTime: string;
@@ -7,3 +9,21 @@ export type CreateRecordingRequest = {
   triggeredAt: string;
   endTime: string;
 };
+
+export type GetRecordingHistoryRequest = {
+  gymUuid: string;
+  courtUuid: string;
+};
+
+export type GetRecordingHistoryResponse = ApiResponse<
+  {
+    uuid: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    recordingStatus: string;
+    expiresAt: string;
+    userName: string;
+    triggeredAt: string;
+  }[]
+>;

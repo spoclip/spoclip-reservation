@@ -1,10 +1,17 @@
-import { useMutation } from '@tanstack/react-query';
-import createRecording from './service';
+import { queryOptions, useMutation } from '@tanstack/react-query';
+import { createRecording, getRecordingHistory } from './service';
+import { recordingQueryKeys } from './key';
+import type { GetRecordingHistoryRequest } from './types';
 
-function useCreateRecordingQuery() {
+export function useCreateRecordingQuery() {
   return useMutation({
     mutationFn: createRecording,
   });
 }
 
-export default useCreateRecordingQuery;
+export function getRecordingHistoryQuery(params: GetRecordingHistoryRequest) {
+  return queryOptions({
+    queryKey: recordingQueryKeys.completed(params),
+    queryFn: () => getRecordingHistory(params),
+  });
+}

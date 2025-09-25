@@ -1,9 +1,14 @@
-import type { CreateRecordingRequest } from './types';
+import type {
+  CreateRecordingRequest,
+  GetRecordingHistoryRequest,
+} from './types';
 
 import api from '@/libs/api';
 
-function createRecording(data: CreateRecordingRequest) {
+export function createRecording(data: CreateRecordingRequest) {
   return api.post('/api/recording', data);
 }
 
-export default createRecording;
+export function getRecordingHistory(params: GetRecordingHistoryRequest) {
+  return api.get('/api/recordings/completed', { params });
+}
