@@ -7,7 +7,6 @@ import { Smartphone } from 'lucide-react';
 function PhoneNumberInputSection() {
   const form = useFormContext<CreateRecordingFormSchema>();
 
-  console.log(form.watch('phoneNumber'));
   return (
     <Controller
       control={form.control}
@@ -17,6 +16,7 @@ function PhoneNumberInputSection() {
           <TextField.Root
             type="tel"
             variant="soft"
+            disabled
             size="3"
             placeholder="010-0000-0000"
             {...field}

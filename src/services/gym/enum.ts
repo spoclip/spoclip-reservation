@@ -7,3 +7,13 @@ export enum OperationDay {
   SATURDAY = 'SATURDAY',
   SUNDAY = 'SUNDAY',
 }
+
+export const OperationDays = [
+  OperationDay.SUNDAY,
+  OperationDay.MONDAY,
+  OperationDay.TUESDAY,
+  OperationDay.WEDNESDAY,
+  OperationDay.THURSDAY,
+  OperationDay.FRIDAY,
+  OperationDay.SATURDAY,
+];

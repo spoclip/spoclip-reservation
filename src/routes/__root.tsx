@@ -1,9 +1,24 @@
-import { Container } from '@radix-ui/themes';
-import { Outlet, createRootRoute } from '@tanstack/react-router';
+import { MOCK_COURT_UUID, MOCK_GYM_UUID } from '@/mock';
+import { Box, Container, Text } from '@radix-ui/themes';
+import {
+  Outlet,
+  SearchParamError,
+  createRootRoute,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { zodValidator } from '@tanstack/zod-adapter';
+import z from 'zod/v3';
+
+const searchSchema = z.object({
+  // @todo. default value should be removed
+  gymUuid: z.string().default(MOCK_GYM_UUID),
+  courtUuid: z.string().default(MOCK_COURT_UUID),
+});
 
 export const Route = createRootRoute({
   component: Root,
+  validateSearch: zodValidator(searchSchema),
+  errorComponent: ErrorComponent,
 });
 
 function Root() {
@@ -13,4 +28,19 @@ function Root() {
       <TanStackRouterDevtools />
     </Container>
   );
+}
+
+function ErrorComponent({ error }: { error: Error }) {
+  if (error instanceof SearchParamError) {
+    return (
+      <Box p="4">
+        <Text>
+          비 정상적인 접근입니다.
+          <br />
+          QR 코드를 통해 접속해주세요
+        </Text>
+      </Box>
+    );
+  }
+  return <div>{error.message}</div>;
 }

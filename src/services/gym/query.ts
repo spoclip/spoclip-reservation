@@ -1,22 +1,36 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
-import type { GetCourtRequest, GetGymRequest } from './types';
-import { getCourt, getGym } from './service';
+import type {
+  GetCourtRequest,
+  GetCourtResponse,
+  GetGymRequest,
+  GetGymResponse,
+} from './types';
 import { gymQueryKey } from './key';
+import api from '@/libs/api';
+import { parseOperationHour } from '@/libs/recording';
 
-export function useGetGym({ uuid }: GetGymRequest) {
-  return useSuspenseQuery({
-    ...getGymQuery(uuid),
-  });
-}
-
-export const getGymQuery = (uuid: string) =>
+export const getGymQuery = ({ gymUuid }: GetGymRequest) =>
   queryOptions({
-    queryKey: gymQueryKey.detailGym(uuid),
-    queryFn: () => getGym({ uuid }),
+    queryKey: gymQueryKey.detailGym(gymUuid),
+    queryFn: async () => {
+      const { data } = await api.get<GetGymResponse>(`/gyms/${gymUuid}`);
+      return data.data;
+    },
+    select: (data) => {
+      return {
+        ...data,
+        todayOperatingTime: parseOperationHour(data.operatingHours),
+      };
+    },
   });
 
 export const getCourtQuery = (params: GetCourtRequest) =>
   queryOptions({
     queryKey: gymQueryKey.detailCourt(params.courtUuid),
-    queryFn: () => getCourt(params),
+    queryFn: async () => {
+      const { data } = await api.get<GetCourtResponse>(
+        `/courts/detail/${params.courtUuid}`,
+      );
+      return data.data;
+    },
   });

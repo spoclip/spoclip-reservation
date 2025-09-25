@@ -2,7 +2,7 @@ import type { ApiResponse } from '@/types/api';
 import type { OperationDay } from './enum';
 
 export type GetGymRequest = {
-  uuid: string;
+  gymUuid: string;
 };
 
 export type GetGymResponse = ApiResponse<{
@@ -22,7 +22,6 @@ export type GetGymResponse = ApiResponse<{
 }>;
 
 export type GetCourtRequest = {
-  gymUuid: string;
   courtUuid: string;
 };
 

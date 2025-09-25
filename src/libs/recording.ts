@@ -1,34 +1,24 @@
-import { addMinutes, isAfter, isBefore } from 'date-fns';
+import type { GetGymResponse } from '@/services/gym';
+import { OperationDays, type OperationDay } from '@/services/gym/enum';
+import { addMinutes, isAfter, isBefore, subMinutes } from 'date-fns';
 
-export function getNextRecordingEndTime({
+// Todo. 24 시 넘어가는 경우 고려 (백엔드 요청 필요)
+export function getCurrentRecordingEndDate({
+  now,
   recordingIntervalInMinute,
   operationStartHour,
   operationEndHour,
 }: {
+  now: Date;
   recordingIntervalInMinute: number;
   operationStartHour: number;
   operationEndHour: number;
 }) {
-  const now = new Date();
-  const operationStartDate = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    operationStartHour,
-    0,
-    0,
-    0,
-  );
+  const operationStartDate = new Date();
+  operationStartDate.setHours(operationStartHour, 0, 0, 0);
 
-  const operationEndDate = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    operationEndHour,
-    0,
-    0,
-    0,
-  );
+  const operationEndDate = new Date();
+  operationEndDate.setHours(operationEndHour, 0, 0, 0);
 
   let nextRecordingEndDate: Date | null = operationStartDate;
 
@@ -44,4 +34,76 @@ export function getNextRecordingEndTime({
   } while (isBefore(nextRecordingEndDate, operationEndDate));
 
   return nextRecordingEndDate;
+}
+
+export function getCurrentRecordingStartDate({
+  now,
+  recordingIntervalInMinute,
+  operationStartHour,
+  operationEndHour,
+}: {
+  now: Date;
+  recordingIntervalInMinute: number;
+  operationStartHour: number;
+  operationEndHour: number;
+}) {
+  const operationStartDate = new Date();
+  operationStartDate.setHours(operationStartHour, 0, 0, 0);
+
+  const operationEndDate = new Date();
+  operationEndDate.setHours(operationEndHour, 0, 0, 0);
+
+  let currentRecordingStartDate: Date | null = operationStartDate;
+
+  while (isAfter(now, currentRecordingStartDate)) {
+    currentRecordingStartDate = addMinutes(
+      currentRecordingStartDate,
+      recordingIntervalInMinute,
+    );
+  }
+
+  return currentRecordingStartDate;
+}
+
+export function isOverHalfInterval({
+  now,
+  recordingIntervalInMinute,
+  operationStartHour,
+  operationEndHour,
+}: {
+  now: Date;
+  recordingIntervalInMinute: number;
+  operationStartHour: number;
+  operationEndHour: number;
+}) {
+  const currentRecordingEndDate = getCurrentRecordingEndDate({
+    now,
+    recordingIntervalInMinute,
+    operationStartHour,
+    operationEndHour,
+  });
+
+  const halfInterval = recordingIntervalInMinute / 2;
+
+  const halfIntervalDate = subMinutes(currentRecordingEndDate, halfInterval);
+
+  return isAfter(now, halfIntervalDate);
+}
+
+export function parseOperationHour(
+  operationHours: GetGymResponse['data']['operatingHours'],
+) {
+  const now = new Date();
+  const today = OperationDays[now.getDay()];
+  const todayOperatingTime = operationHours.find((hour) => hour.day === today);
+
+  if (!todayOperatingTime) {
+    throw new Error('Today operating time not found');
+  }
+
+  return {
+    ...todayOperatingTime,
+    openHour: Number(todayOperatingTime?.openTime.split(':')[0]),
+    closeHour: Number(todayOperatingTime?.closeTime.split(':')[0]),
+  };
 }
