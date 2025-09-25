@@ -1,8 +1,7 @@
 import type { GetGymResponse } from '@/services/gym';
-import { OperationDays, type OperationDay } from '@/services/gym/enum';
+import { OperationDays } from '@/services/gym/enum';
 import { addMinutes, isAfter, isBefore, subMinutes } from 'date-fns';
 
-// Todo. 24 시 넘어가는 경우 고려 (백엔드 요청 필요)
 export function getCurrentRecordingEndDate({
   now,
   recordingIntervalInMinute,
