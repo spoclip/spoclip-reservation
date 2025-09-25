@@ -5,7 +5,6 @@ import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { Flex, Text } from '@radix-ui/themes';
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { formatDate, isAfter } from 'date-fns';
-import { memo } from 'react';
 
 export default function Timer() {
   return (

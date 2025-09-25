@@ -1,5 +1,8 @@
 import { useNow } from '@/hooks/use-now';
-import { getCurrentRecordingEndDate } from '@/libs/recording';
+import {
+  getCurrentRecordingEndDate,
+  isOverHalfInterval,
+} from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
@@ -36,7 +39,21 @@ function RecordingProgress() {
 
   const clampedValue = Math.max(0, Math.min(value, max));
 
-  return <Progress value={clampedValue} max={max} size="3" />;
+  const isOverHalf = isOverHalfInterval({
+    now,
+    recordingIntervalInMinute: court.recordingInterval,
+    operationStartHour: operationStartHour,
+    operationEndHour: operationEndHour,
+  });
+
+  return (
+    <Progress
+      value={clampedValue}
+      max={max}
+      size="3"
+      color={isOverHalf && !court.isRecording ? 'yellow' : 'green'}
+    />
+  );
 }
 
 export default RecordingProgress;
