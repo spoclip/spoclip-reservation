@@ -7,35 +7,27 @@ import { getCurrentRecordingEndDate } from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { useManualNow } from '@/stores/now';
+import { useRecordingInfoQuery } from '../-hook/use-recording-info-query';
 
 export default function Timer() {
   return (
     <Flex mx="auto" width="100%" justify="between" gap="1" align="center">
-      <NowTimer />
+      <StartTimer />
       <Text size="5">~</Text>
       <EndTimer />
     </Flex>
   );
 }
 
-function NowTimer() {
-  const { gymUuid, courtUuid } = HomeRoute.useSearch();
+function StartTimer() {
   const { now } = useManualNow();
-
-  const [{ data: gym }, { data: court }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
-  });
-
-  const currentRecordingEndDate = getCurrentRecordingEndDate({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
+  const { baseInfo, currentRecordingEndDate } = useRecordingInfoQuery();
 
   const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
 
   const displayedDate = isAfterOperationEnd ? currentRecordingEndDate : now;
+
+  if (!baseInfo?.isRecording) return <NowTimer />;
 
   return (
     <Text
@@ -48,21 +40,20 @@ function NowTimer() {
   );
 }
 
+function NowTimer() {
+  const { now } = useNow({ interval: 1000 });
+  return (
+    <Text size="7" weight="bold">
+      {formatDate(now, 'HH:mm:ss')}
+    </Text>
+  );
+}
+
 function EndTimer() {
   const { now } = useNow({ interval: 1000 });
-  const { courtUuid, gymUuid } = HomeRoute.useSearch();
-  const [{ data: court }, { data: gym }] = useSuspenseQueries({
-    queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
-  });
+  const { currentRecordingEndDate } = useRecordingInfoQuery();
 
-  const nextRecordingEndDate = getCurrentRecordingEndDate({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
-
-  const isAfterOperationEnd = isAfter(now, nextRecordingEndDate);
+  const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
 
   return (
     <Text
@@ -70,7 +61,7 @@ function EndTimer() {
       weight="bold"
       style={{ color: isAfterOperationEnd ? 'var(--gray-8)' : 'inherit' }}
     >
-      {formatDate(nextRecordingEndDate, 'HH:mm:ss')}
+      {formatDate(currentRecordingEndDate, 'HH:mm:ss')}
     </Text>
   );
 }
