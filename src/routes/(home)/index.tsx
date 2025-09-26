@@ -14,6 +14,7 @@ import RecordingInfo from './-components/recording-info';
 import HistoryList from './-components/history-list';
 import RecordingCancelButton from './-components/recording-cancel-button';
 import RecordingButton from './-components/recording-button';
+import RecordingCompleteButton from './-components/recording-complete-button';
 
 const searchSchema = z.object({
   sendToMeDialogId: z.string().optional(),
@@ -62,7 +63,10 @@ function RecordingSection() {
 
         <PhoneNumberInputSection />
         <RecordingButton />
-        <RecordingCancelButton />
+        <Flex gap="2" justify="end">
+          <RecordingCancelButton />
+          <RecordingCompleteButton />
+        </Flex>
       </Flex>
     </Section>
   );

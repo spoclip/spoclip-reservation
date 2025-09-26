@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Button, Dialog, Flex } from '@radix-ui/themes';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Box } from '@radix-ui/themes/src/index.js';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { useCancelRecordingMutation } from '@/services/recording/query';
@@ -50,11 +49,9 @@ function RecordingCancelButton() {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
-        <Box ml="auto">
-          <Button variant="soft" color="red">
-            녹화 취소
-          </Button>
-        </Box>
+        <Button variant="soft" color="red">
+          녹화 취소
+        </Button>
       </Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Title>녹화 취소</Dialog.Title>
