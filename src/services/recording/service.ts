@@ -3,9 +3,9 @@ import type {
   CreateRecordingRequest,
   GetRecordingHistoryRequest,
   GetRecordingHistoryResponse,
-  HasRecordingRequest,
-  HasRecordingResponse,
   SendToMeRecordingRequest,
+  GetRecordingBaseInfoRequest,
+  GetRecordingBaseInfoResponse,
 } from './types';
 
 import api from '@/libs/api';
@@ -32,15 +32,25 @@ export async function sendToMeRecording({
   return data.data;
 }
 
-export function cancelRecording(params: CancelRecordingRequest) {
-  return api.delete(`/recordings/${params.uuid}`);
+export function cancelRecording({ uuid, ...params }: CancelRecordingRequest) {
+  return api.delete(`/recordings/${uuid}`, {
+    data: {
+      ...params,
+      triggeredAt: new Date().toISOString(),
+    },
+  });
 }
 
-export async function hasRecording(params: HasRecordingRequest) {
-  const { data } = await api.post<HasRecordingResponse>(`/recordings/active`, {
-    ...params,
-    triggeredAt: new Date().toISOString(),
-    date: new Date().toISOString(),
-  });
+export async function getRecordingBaseInfo(
+  params: GetRecordingBaseInfoRequest,
+) {
+  const { data } = await api.post<GetRecordingBaseInfoResponse>(
+    `/recordings/active`,
+    {
+      ...params,
+      triggeredAt: new Date().toISOString(),
+      date: new Date().toISOString(),
+    },
+  );
   return data?.data;
 }

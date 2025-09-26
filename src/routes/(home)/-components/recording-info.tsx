@@ -12,7 +12,7 @@ import {
 } from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { hasRecordingQuery } from '@/services/recording/query';
+import { getRecordingBaseInfoQuery } from '@/services/recording/query';
 
 export default memo(function RecordingInfo() {
   const now = new Date();
@@ -43,7 +43,7 @@ export default memo(function RecordingInfo() {
   });
 
   const { data } = useQuery(
-    hasRecordingQuery({
+    getRecordingBaseInfoQuery({
       courtUuid,
       gymUuid,
       startTime: currentRecordingStartDate.toISOString(),

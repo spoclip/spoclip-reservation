@@ -1,4 +1,7 @@
-import type { GetRecordingHistoryRequest, HasRecordingRequest } from './types';
+import type {
+  GetRecordingHistoryRequest,
+  GetRecordingBaseInfoRequest,
+} from './types';
 
 export const recordingQueryKeys = {
   all: ['recording'] as const,
@@ -9,6 +12,6 @@ export const recordingQueryKeys = {
       params.gymUuid,
       params.courtUuid,
     ] as const,
-  active: (params: HasRecordingRequest) =>
+  active: (params: GetRecordingBaseInfoRequest) =>
     [...recordingQueryKeys.all, 'active', params] as const,
 };

@@ -3,15 +3,15 @@ import { queryOptions, useMutation } from '@tanstack/react-query';
 import {
   cancelRecording,
   createRecording,
+  getRecordingBaseInfo,
   getRecordingHistory,
-  hasRecording,
   sendToMeRecording,
 } from './service';
 import { recordingQueryKeys } from './key';
 import type {
   CancelRecordingRequest,
+  GetRecordingBaseInfoRequest,
   GetRecordingHistoryRequest,
-  HasRecordingRequest,
   SendToMeRecordingRequest,
 } from './types';
 
@@ -40,9 +40,9 @@ export function useCancelRecordingMutation() {
   });
 }
 
-export function hasRecordingQuery(params: HasRecordingRequest) {
+export function getRecordingBaseInfoQuery(params: GetRecordingBaseInfoRequest) {
   return queryOptions({
     queryKey: recordingQueryKeys.active(params),
-    queryFn: () => hasRecording(params),
+    queryFn: () => getRecordingBaseInfo(params),
   });
 }

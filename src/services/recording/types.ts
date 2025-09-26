@@ -39,16 +39,18 @@ export type SendToMeRecordingRequest = {
 
 export type CancelRecordingRequest = {
   uuid: string;
+  gymUuid: string;
+  courtUuid: string;
 };
 
-export type HasRecordingRequest = {
+export type GetRecordingBaseInfoRequest = {
   gymUuid: string;
   courtUuid: string;
   startTime: string;
   endTime: string;
 };
 
-export type HasRecordingResponse = ApiResponse<{
+export type GetRecordingBaseInfoResponse = ApiResponse<{
   uuid: string;
   date: string;
   startTime: string;
