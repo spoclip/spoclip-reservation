@@ -27,8 +27,8 @@ function NowTimer() {
   const currentRecordingEndDate = getCurrentRecordingEndDate({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operationStartHour: gym.todayOperatingTime.openHour,
-    operationEndHour: gym.todayOperatingTime.closeHour,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
   const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
@@ -56,8 +56,8 @@ function EndTimer() {
   const nextRecordingEndDate = getCurrentRecordingEndDate({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operationStartHour: gym.todayOperatingTime.openHour,
-    operationEndHour: gym.todayOperatingTime.closeHour,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
   const isAfterOperationEnd = isAfter(now, nextRecordingEndDate);

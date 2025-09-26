@@ -13,6 +13,7 @@ export type CreateRecordingRequest = {
 export type GetRecordingHistoryRequest = {
   gymUuid: string;
   courtUuid: string;
+  triggeredAt: string;
 };
 
 export type GetRecordingHistoryResponse = ApiResponse<
@@ -21,7 +22,7 @@ export type GetRecordingHistoryResponse = ApiResponse<
     date: string;
     startTime: string;
     endTime: string;
-    recordingStatus: string;
+    recordingStatus: 'RECORDING' | 'COMPLETED';
     expiresAt: string;
     userName: string;
     triggeredAt: string;

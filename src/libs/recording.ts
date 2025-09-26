@@ -5,19 +5,19 @@ import { addMinutes, isAfter, isBefore, subMinutes } from 'date-fns';
 export function getCurrentRecordingEndDate({
   now,
   recordingIntervalInMinute,
-  operationStartHour,
-  operationEndHour,
+  operatingStartHour,
+  operatingEndHour,
 }: {
   now: Date;
   recordingIntervalInMinute: number;
-  operationStartHour: number;
-  operationEndHour: number;
+  operatingStartHour: number;
+  operatingEndHour: number;
 }) {
   const operationStartDate = new Date();
-  operationStartDate.setHours(operationStartHour, 0, 0, 0);
+  operationStartDate.setHours(operatingStartHour, 0, 0, 0);
 
   const operationEndDate = new Date();
-  operationEndDate.setHours(operationEndHour, 0, 0, 0);
+  operationEndDate.setHours(operatingEndHour, 0, 0, 0);
 
   let nextRecordingEndDate: Date | null = operationStartDate;
 
@@ -38,19 +38,19 @@ export function getCurrentRecordingEndDate({
 export function getCurrentRecordingStartDate({
   now,
   recordingIntervalInMinute,
-  operationStartHour,
-  operationEndHour,
+  operatingStartHour,
+  operatingEndHour,
 }: {
   now: Date;
   recordingIntervalInMinute: number;
-  operationStartHour: number;
-  operationEndHour: number;
+  operatingStartHour: number;
+  operatingEndHour: number;
 }) {
   const operationStartDate = new Date();
-  operationStartDate.setHours(operationStartHour, 0, 0, 0);
+  operationStartDate.setHours(operatingStartHour, 0, 0, 0);
 
   const operationEndDate = new Date();
-  operationEndDate.setHours(operationEndHour, 0, 0, 0);
+  operationEndDate.setHours(operatingEndHour, 0, 0, 0);
 
   let currentRecordingStartDate: Date | null = operationStartDate;
 
@@ -67,19 +67,19 @@ export function getCurrentRecordingStartDate({
 export function isOverHalfInterval({
   now,
   recordingIntervalInMinute,
-  operationStartHour,
-  operationEndHour,
+  operatingStartHour,
+  operatingEndHour,
 }: {
   now: Date;
   recordingIntervalInMinute: number;
-  operationStartHour: number;
-  operationEndHour: number;
+  operatingStartHour: number;
+  operatingEndHour: number;
 }) {
   const currentRecordingEndDate = getCurrentRecordingEndDate({
     now,
     recordingIntervalInMinute,
-    operationStartHour,
-    operationEndHour,
+    operatingStartHour,
+    operatingEndHour,
   });
 
   const halfInterval = recordingIntervalInMinute / 2;

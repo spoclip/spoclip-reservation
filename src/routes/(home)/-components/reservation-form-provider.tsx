@@ -41,21 +41,21 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
     const operationHour = gym.operatingHours.find(
       (hour) => hour.day === OperationDays[now.getDay()],
     );
-    const operationStartHour = Number(operationHour?.openTime.split(':')[0]);
-    const operationEndHour = Number(operationHour?.closeTime.split(':')[0]);
+    const operatingStartHour = Number(operationHour?.openTime.split(':')[0]);
+    const operatingEndHour = Number(operationHour?.closeTime.split(':')[0]);
 
     const currentRecordingStartDate = getCurrentRecordingStartDate({
       now,
       recordingIntervalInMinute: court.recordingInterval,
-      operationStartHour: operationStartHour,
-      operationEndHour: operationEndHour,
+      operatingStartHour: operatingStartHour,
+      operatingEndHour: operatingEndHour,
     });
 
     const currentRecordingEndDate = getCurrentRecordingEndDate({
       now,
       recordingIntervalInMinute: court.recordingInterval,
-      operationStartHour: operationStartHour,
-      operationEndHour: operationEndHour,
+      operatingStartHour: operatingStartHour,
+      operatingEndHour: operatingEndHour,
     });
 
     const requestData: CreateRecordingRequest = {

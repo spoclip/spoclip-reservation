@@ -22,14 +22,14 @@ function RecordingProgress() {
     (hour) => hour.day === OperationDays[now.getDay()],
   );
 
-  const operationStartHour = Number(operationHour?.openTime.split(':')[0]);
-  const operationEndHour = Number(operationHour?.closeTime.split(':')[0]);
+  const operatingStartHour = Number(operationHour?.openTime.split(':')[0]);
+  const operatingEndHour = Number(operationHour?.closeTime.split(':')[0]);
 
   const endDate = getCurrentRecordingEndDate({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operationStartHour: operationStartHour,
-    operationEndHour: operationEndHour,
+    operatingStartHour: operatingStartHour,
+    operatingEndHour: operatingEndHour,
   });
 
   const TRIGGRED_AT = new Date('2025-09-25T22:00:00');
@@ -42,8 +42,8 @@ function RecordingProgress() {
   const isOverHalf = isOverHalfInterval({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operationStartHour: operationStartHour,
-    operationEndHour: operationEndHour,
+    operatingStartHour: operatingStartHour,
+    operatingEndHour: operatingEndHour,
   });
 
   return (

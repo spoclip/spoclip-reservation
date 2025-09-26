@@ -20,16 +20,16 @@ export default function RecordingInfo() {
   const currentRecordingEndDate = getCurrentRecordingEndDate({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operationStartHour: gym.todayOperatingTime.openHour,
-    operationEndHour: gym.todayOperatingTime.closeHour,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
   const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
   const isOverHalf = isOverHalfInterval({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operationStartHour: gym.todayOperatingTime.openHour,
-    operationEndHour: gym.todayOperatingTime.closeHour,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
   return (
