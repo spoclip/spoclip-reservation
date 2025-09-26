@@ -7,7 +7,7 @@ import type {
 import api from '@/libs/api';
 
 export function createRecording(data: CreateRecordingRequest) {
-  return api.post('/recording', data);
+  return api.post('/recordings', data);
 }
 
 export async function getRecordingHistory(params: GetRecordingHistoryRequest) {

@@ -1,6 +1,12 @@
 import type { GetGymResponse } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
-import { addMinutes, isAfter, isBefore, subMinutes } from 'date-fns';
+import {
+  addMinutes,
+  isAfter,
+  isBefore,
+  isSameSecond,
+  subMinutes,
+} from 'date-fns';
 
 export function getCurrentRecordingEndDate({
   now,
@@ -54,7 +60,10 @@ export function getCurrentRecordingStartDate({
 
   let currentRecordingStartDate: Date | null = operationStartDate;
 
-  while (isAfter(now, currentRecordingStartDate)) {
+  while (
+    isSameSecond(now, currentRecordingStartDate) ||
+    isAfter(now, currentRecordingStartDate)
+  ) {
     currentRecordingStartDate = addMinutes(
       currentRecordingStartDate,
       recordingIntervalInMinute,

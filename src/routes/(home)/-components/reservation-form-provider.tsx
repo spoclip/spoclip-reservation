@@ -32,6 +32,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
   });
 
   const onSubmit = (data: CreateRecordingFormSchema) => {
+    console.log(data);
     if (!court?.recordingInterval || !gym?.operatingHours) {
       throw new Error('Court recording interval is not found');
     }
@@ -72,7 +73,13 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>{children}</form>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.log(errors);
+        })}
+      >
+        {children}
+      </form>
     </FormProvider>
   );
 }

@@ -16,7 +16,6 @@ function PhoneNumberInputSection() {
           <TextField.Root
             type="tel"
             variant="soft"
-            disabled
             size="3"
             placeholder="010-0000-0000"
             {...field}

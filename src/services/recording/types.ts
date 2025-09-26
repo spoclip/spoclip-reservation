@@ -1,12 +1,13 @@
 import type { ApiResponse } from '@/types/api';
 
 export type CreateRecordingRequest = {
-  date: string;
-  startTime: string;
-  phoneNumber: string;
   gymUuid: string;
   courtUuid: string;
   triggeredAt: string;
+  phoneNumber: string;
+
+  date: string;
+  startTime: string;
   endTime: string;
 };
 

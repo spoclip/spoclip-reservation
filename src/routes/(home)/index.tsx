@@ -69,7 +69,7 @@ function RecordingSection() {
         </Heading>
         <RecordingInfo />
         {!isOperatingEnd && <Timer />}
-        {!isOperatingEnd && <RecordingProgress />}
+        {!isOperatingEnd && court.isRecording && <RecordingProgress />}
         {!isOperatingEnd && !court.isRecording && !isOverHalfTime && (
           <PhoneNumberInputSection />
         )}

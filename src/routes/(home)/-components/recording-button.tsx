@@ -2,19 +2,19 @@ import { useNow } from '@/hooks/use-now';
 import { Box, Button } from '@radix-ui/themes';
 import { isOverHalfInterval } from '@/libs/recording';
 import { useSuspenseQueries } from '@tanstack/react-query';
-import { getGymQuery } from '@/services/gym';
+import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { HomeRoute } from '@/libs/routes';
 
 function RecordingButton() {
   const { now } = useNow();
-  const { gymUuid } = HomeRoute.useSearch();
-  const [{ data: gym }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid })],
+  const { gymUuid, courtUuid } = HomeRoute.useSearch();
+  const [{ data: gym }, { data: court }] = useSuspenseQueries({
+    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
   });
 
   const isOverHalfTime = isOverHalfInterval({
     now: now,
-    recordingIntervalInMinute: 30,
+    recordingIntervalInMinute: court.recordingInterval,
     operatingStartHour: gym.todayOperatingTime.openHour,
     operatingEndHour: gym.todayOperatingTime.closeHour,
   });
