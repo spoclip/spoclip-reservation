@@ -33,7 +33,6 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
   });
 
   const onSubmit = (data: CreateRecordingFormSchema) => {
-    console.log(data);
     if (!court?.recordingInterval || !gym?.operatingHours) {
       throw new Error('Court recording interval is not found');
     }

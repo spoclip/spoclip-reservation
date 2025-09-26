@@ -29,3 +29,11 @@ export type GetRecordingHistoryResponse = ApiResponse<
     triggeredAt: string;
   }[]
 >;
+
+export type SendToMeRecordingRequest = {
+  uuid: string;
+  gymUuid: string;
+  courtUuid: string;
+  triggeredAt: string;
+  phoneNumber: string;
+};

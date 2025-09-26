@@ -2,6 +2,7 @@ import type {
   CreateRecordingRequest,
   GetRecordingHistoryRequest,
   GetRecordingHistoryResponse,
+  SendToMeRecordingRequest,
 } from './types';
 
 import api from '@/libs/api';
@@ -17,5 +18,13 @@ export async function getRecordingHistory(params: GetRecordingHistoryRequest) {
       params,
     },
   );
+  return data.data;
+}
+
+export async function sendToMeRecording({
+  uuid,
+  ...params
+}: SendToMeRecordingRequest) {
+  const { data } = await api.post(`/recordings/${uuid}/schedule`, params);
   return data.data;
 }

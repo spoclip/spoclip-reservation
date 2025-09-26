@@ -59,7 +59,6 @@ export function getCurrentRecordingStartDate({
   operationEndDate.setHours(operatingEndHour, 0, 0, 0);
 
   let currentRecordingStartDate: Date | null = operationStartDate;
-  console.log(isAfter(now, currentRecordingStartDate));
 
   while (
     isSameSecond(now, currentRecordingStartDate) ||
@@ -68,11 +67,6 @@ export function getCurrentRecordingStartDate({
     currentRecordingStartDate = addMinutes(
       currentRecordingStartDate,
       recordingIntervalInMinute,
-    );
-    console.log(
-      'addMinutes',
-      recordingIntervalInMinute,
-      currentRecordingStartDate,
     );
   }
 
