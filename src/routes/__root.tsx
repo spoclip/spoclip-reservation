@@ -8,6 +8,7 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { zodValidator } from '@tanstack/zod-adapter';
 import z from 'zod/v3';
+import Header from '@/components/common/header';
 
 const searchSchema = z.object({
   // @todo. default value should be removed
@@ -23,10 +24,13 @@ export const Route = createRootRoute({
 
 function Root() {
   return (
-    <Container width="100%" maxWidth="600px" p="4">
-      <Outlet />
-      <TanStackRouterDevtools />
-    </Container>
+    <>
+      <Header />
+      <Container width="100%" maxWidth="600px" p="4" mt="7">
+        <Outlet />
+        <TanStackRouterDevtools />
+      </Container>
+    </>
   );
 }
 

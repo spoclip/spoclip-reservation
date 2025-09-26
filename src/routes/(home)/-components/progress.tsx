@@ -50,6 +50,7 @@ function RecordingProgress() {
     <Progress
       value={clampedValue}
       max={max}
+      style={{ height: 40 }}
       size="3"
       color={isOverHalf && !court.isRecording ? 'yellow' : 'green'}
     />
