@@ -1,12 +1,14 @@
-import { HomeRoute } from '@/libs/routes';
-import { OperationDay } from '@/services/gym/enum';
-import { getGymQuery } from '@/services/gym/query';
+import { Suspense } from 'react';
+
 import { Flex, Skeleton, Text } from '@radix-ui/themes';
 import { Callout } from '@radix-ui/themes/src/index.js';
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { Clock, MapPin } from 'lucide-react';
-import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+
+import { getGymQuery } from '@/services/gym/query';
+import { OperationDay } from '@/services/gym/enum';
+import { HomeRoute } from '@/libs/routes';
 
 export default function GymInfo() {
   return (

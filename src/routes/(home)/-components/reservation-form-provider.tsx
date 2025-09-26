@@ -1,5 +1,6 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 
 import {
   createRecordingFormSchema,
@@ -11,7 +12,6 @@ import {
   getCurrentRecordingEndDate,
   getCurrentRecordingStartDate,
 } from '@/libs/recording';
-import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
@@ -80,13 +80,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit, (errors) => {
-          console.log(errors);
-        })}
-      >
-        {children}
-      </form>
+      <form onSubmit={form.handleSubmit(onSubmit, () => {})}>{children}</form>
     </FormProvider>
   );
 }

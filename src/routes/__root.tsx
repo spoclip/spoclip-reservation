@@ -1,4 +1,3 @@
-import { MOCK_COURT_UUID, MOCK_GYM_UUID } from '@/mock';
 import { Box, Container, Text } from '@radix-ui/themes';
 import {
   Outlet,
@@ -7,7 +6,9 @@ import {
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { zodValidator } from '@tanstack/zod-adapter';
-import z from 'zod/v3';
+import { z } from 'zod/v3';
+
+import { MOCK_COURT_UUID, MOCK_GYM_UUID } from '@/mock';
 import Header from '@/components/common/header';
 
 const searchSchema = z.object({

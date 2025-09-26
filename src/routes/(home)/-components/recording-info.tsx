@@ -1,23 +1,33 @@
-import { useNow } from '@/hooks/use-now';
+import { memo } from 'react';
+
+import { Callout } from '@radix-ui/themes';
+import { useQuery, useSuspenseQueries } from '@tanstack/react-query';
+import { formatDate, isAfter } from 'date-fns';
+import { AlertCircle } from 'lucide-react';
+
 import {
   getCurrentRecordingEndDate,
+  getCurrentRecordingStartDate,
   isOverHalfInterval,
 } from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { Callout } from '@radix-ui/themes';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { formatDate, isAfter } from 'date-fns';
-import { AlertCircle } from 'lucide-react';
+import { hasRecordingQuery } from '@/services/recording/query';
 
-export default function RecordingInfo() {
-  const { now } = useNow();
+export default memo(function RecordingInfo() {
+  const now = new Date();
 
   const { courtUuid, gymUuid } = HomeRoute.useSearch();
   const [{ data: court }, { data: gym }] = useSuspenseQueries({
     queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
   });
   const currentRecordingEndDate = getCurrentRecordingEndDate({
+    now,
+    recordingIntervalInMinute: court.recordingInterval,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
+  });
+  const currentRecordingStartDate = getCurrentRecordingStartDate({
     now,
     recordingIntervalInMinute: court.recordingInterval,
     operatingStartHour: gym.todayOperatingTime.openHour,
@@ -32,6 +42,18 @@ export default function RecordingInfo() {
     operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
+  const { data } = useQuery(
+    hasRecordingQuery({
+      courtUuid,
+      gymUuid,
+      startTime: currentRecordingStartDate.toISOString(),
+      endTime: currentRecordingEndDate.toISOString(),
+    }),
+  );
+
+  // when data is undefined, it means there is no recording
+  if (!data) return null;
+
   return (
     <>
       {(() => {
@@ -45,7 +67,7 @@ export default function RecordingInfo() {
             </Callout.Root>
           );
         }
-        if (isOverHalf && !court.isRecording) {
+        if (isOverHalf && data.recordingStatus !== 'RECORDING') {
           return (
             <Callout.Root color="yellow">
               <Callout.Icon>
@@ -58,7 +80,7 @@ export default function RecordingInfo() {
             </Callout.Root>
           );
         }
-        if (court.isRecording) {
+        if (data.recordingStatus === 'RECORDING') {
           return (
             <Callout.Root color="green">
               <Callout.Icon>
@@ -72,4 +94,4 @@ export default function RecordingInfo() {
       })()}
     </>
   );
-}
+});

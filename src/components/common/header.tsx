@@ -1,15 +1,11 @@
-import {
-  Button,
-  Container,
-  Flex,
-  IconButton,
-  Reset,
-  Text,
-} from '@radix-ui/themes';
-import s from './header.css';
-import { logo } from '../../assets';
-import { MenuIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
+
+import { Button, Container, Flex, IconButton } from '@radix-ui/themes';
+import { MenuIcon, XIcon } from 'lucide-react';
+
+import s from './header.css';
+
+import { logo } from '@/assets';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

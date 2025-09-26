@@ -36,3 +36,25 @@ export type SendToMeRecordingRequest = {
   triggeredAt: string;
   phoneNumber: string;
 };
+
+export type CancelRecordingRequest = {
+  uuid: string;
+};
+
+export type HasRecordingRequest = {
+  gymUuid: string;
+  courtUuid: string;
+  startTime: string;
+  endTime: string;
+};
+
+export type HasRecordingResponse = ApiResponse<{
+  uuid: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  recordingStatus: 'RECORDING' | 'COMPLETED';
+  expiresAt: string;
+  userName: string;
+  triggeredAt: string;
+} | null>;

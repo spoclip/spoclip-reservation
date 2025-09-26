@@ -1,5 +1,3 @@
-import type { GetGymResponse } from '@/services/gym';
-import { OperationDays } from '@/services/gym/enum';
 import {
   addMinutes,
   isAfter,
@@ -7,6 +5,9 @@ import {
   isSameSecond,
   subMinutes,
 } from 'date-fns';
+
+import type { GetGymResponse } from '@/services/gym';
+import { OperationDays } from '@/services/gym/enum';
 
 export function getCurrentRecordingEndDate({
   now,

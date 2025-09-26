@@ -1,5 +1,11 @@
+import { Suspense } from 'react';
+
 import { Flex, Heading, Section } from '@radix-ui/themes';
 import { createFileRoute } from '@tanstack/react-router';
+import { useSuspenseQueries } from '@tanstack/react-query';
+import { isAfter } from 'date-fns';
+import { zodValidator } from '@tanstack/zod-adapter';
+import { z } from 'zod/v3';
 
 import PhoneNumberInputSection from './-components/phone-number-input-section';
 import ReservationFormProvider from './-components/reservation-form-provider';
@@ -8,15 +14,12 @@ import GymInfo from './-components/gym-info';
 import RecordingButton from './-components/recording-button';
 import RecordingProgress from './-components/progress';
 import RecordingInfo from './-components/recording-info';
-import { useNow } from '@/hooks/use-now';
-import { HomeRoute } from '@/libs/routes';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { isAfter } from 'date-fns';
-import { isOverHalfInterval } from '@/libs/recording';
 import HistoryList from './-components/history-list';
-import { zodValidator } from '@tanstack/zod-adapter';
-import z from 'zod/v3';
+import RecordingCancelButton from './-components/recording-cancel-button';
+
+import { HomeRoute } from '@/libs/routes';
+import { getCourtQuery, getGymQuery } from '@/services/gym';
+import { isOverHalfInterval } from '@/libs/recording';
 
 const searchSchema = z.object({
   sendToMeDialogId: z.string().optional(),
@@ -40,16 +43,20 @@ function RouteComponent() {
           </Flex>
         </Section>
 
-        <RecordingSection />
+        <Suspense>
+          <RecordingSection />
+        </Suspense>
 
-        <RecordingHistorySection />
+        <Suspense>
+          <RecordingHistorySection />
+        </Suspense>
       </Flex>
     </ReservationFormProvider>
   );
 }
 
 function RecordingSection() {
-  const { now } = useNow();
+  const now = new Date();
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
 
   const [{ data: gym }, { data: court }] = useSuspenseQueries({
@@ -83,6 +90,7 @@ function RecordingSection() {
         {!isOperatingEnd && !court.isRecording && !isOverHalfTime && (
           <RecordingButton />
         )}
+        {court.isRecording && <RecordingCancelButton />}
       </Flex>
     </Section>
   );

@@ -1,8 +1,8 @@
 import { Box, TextField } from '@radix-ui/themes';
 import { Controller, useFormContext } from 'react-hook-form';
+import { Smartphone } from 'lucide-react';
 
 import type { CreateRecordingFormSchema } from '@/routes/(home)/-types/recording';
-import { Smartphone } from 'lucide-react';
 
 function PhoneNumberInputSection() {
   const form = useFormContext<CreateRecordingFormSchema>();

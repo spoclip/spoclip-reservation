@@ -10,7 +10,7 @@ export function useNow(
       setNow(new Date());
     }, interval);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [interval]);
 
   function updateNow() {
     setNow(new Date());

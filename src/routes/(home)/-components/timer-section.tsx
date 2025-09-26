@@ -1,10 +1,11 @@
+import { Flex, Text } from '@radix-ui/themes';
+import { useSuspenseQueries } from '@tanstack/react-query';
+import { formatDate, isAfter } from 'date-fns';
+
 import { useNow } from '@/hooks/use-now';
 import { getCurrentRecordingEndDate } from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { Flex, Text } from '@radix-ui/themes';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { formatDate, isAfter } from 'date-fns';
 
 export default function Timer() {
   return (

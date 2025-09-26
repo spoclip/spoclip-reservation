@@ -9,6 +9,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default defineConfig([
+  ...pluginQuery.configs['flat/recommended'],
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
@@ -17,7 +18,6 @@ export default defineConfig([
       tseslint.configs.recommended,
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
-      pluginQuery.configs.recommended,
     ],
     languageOptions: {
       ecmaVersion: 2020,

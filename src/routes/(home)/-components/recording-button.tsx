@@ -1,7 +1,8 @@
-import { useNow } from '@/hooks/use-now';
 import { Box, Button } from '@radix-ui/themes';
-import { isOverHalfInterval } from '@/libs/recording';
 import { useSuspenseQueries } from '@tanstack/react-query';
+
+import { useNow } from '@/hooks/use-now';
+import { isOverHalfInterval } from '@/libs/recording';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { HomeRoute } from '@/libs/routes';
 

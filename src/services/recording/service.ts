@@ -1,7 +1,10 @@
 import type {
+  CancelRecordingRequest,
   CreateRecordingRequest,
   GetRecordingHistoryRequest,
   GetRecordingHistoryResponse,
+  HasRecordingRequest,
+  HasRecordingResponse,
   SendToMeRecordingRequest,
 } from './types';
 
@@ -27,4 +30,17 @@ export async function sendToMeRecording({
 }: SendToMeRecordingRequest) {
   const { data } = await api.post(`/recordings/${uuid}/schedule`, params);
   return data.data;
+}
+
+export function cancelRecording(params: CancelRecordingRequest) {
+  return api.delete(`/recordings/${params.uuid}`);
+}
+
+export async function hasRecording(params: HasRecordingRequest) {
+  const { data } = await api.post<HasRecordingResponse>(`/recordings/active`, {
+    ...params,
+    triggeredAt: new Date().toISOString(),
+    date: new Date().toISOString(),
+  });
+  return data?.data;
 }

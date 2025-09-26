@@ -1,10 +1,4 @@
-import {
-  getRecordingHistoryQuery,
-  useSendToMeRecordingMutation,
-} from '@/services/recording/query';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { HomeRoute } from '@/libs/routes';
-import type { GetRecordingHistoryResponse } from '@/services/recording/types';
 import {
   Box,
   Button,
@@ -15,14 +9,21 @@ import {
   TextField,
 } from '@radix-ui/themes';
 import { differenceInMinutes, formatDate } from 'date-fns';
-import { useNow } from '@/hooks/use-now';
-import { formatTimeUntilExpiration } from '@/libs/date-utils';
 import { ChevronRight, InfoIcon, Smartphone } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
-import z from 'zod/v3';
+import { z } from 'zod/v3';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
+
+import { formatTimeUntilExpiration } from '@/libs/date-utils';
+import { useNow } from '@/hooks/use-now';
+import type { GetRecordingHistoryResponse } from '@/services/recording/types';
+import { HomeRoute } from '@/libs/routes';
+import {
+  getRecordingHistoryQuery,
+  useSendToMeRecordingMutation,
+} from '@/services/recording/query';
 
 function HistoryList() {
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
@@ -114,7 +115,6 @@ function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
 
   const { mutate } = useSendToMeRecordingMutation();
   const onSubmit = (data: z.infer<typeof sendToMeFormSchema>) => {
-    console.log(data);
     mutate(
       {
         uuid,

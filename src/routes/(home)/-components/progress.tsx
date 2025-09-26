@@ -1,3 +1,7 @@
+import { Progress } from '@radix-ui/themes';
+import { useSuspenseQueries } from '@tanstack/react-query';
+import { differenceInSeconds } from 'date-fns';
+
 import { useNow } from '@/hooks/use-now';
 import {
   getCurrentRecordingEndDate,
@@ -6,9 +10,6 @@ import {
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
-import { Progress } from '@radix-ui/themes';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { differenceInSeconds } from 'date-fns';
 
 function RecordingProgress() {
   const { courtUuid, gymUuid } = HomeRoute.useSearch();

@@ -1,5 +1,6 @@
+import { OperationDay } from './enum';
+
 import type { ApiResponse } from '@/types/api';
-import type { OperationDay } from './enum';
 
 export type GetGymRequest = {
   gymUuid: string;
