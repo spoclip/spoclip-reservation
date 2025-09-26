@@ -2,8 +2,6 @@ import { Suspense } from 'react';
 
 import { Flex, Heading, Section } from '@radix-ui/themes';
 import { createFileRoute } from '@tanstack/react-router';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { isAfter } from 'date-fns';
 import { zodValidator } from '@tanstack/zod-adapter';
 import { z } from 'zod/v3';
 
@@ -11,15 +9,10 @@ import PhoneNumberInputSection from './-components/phone-number-input-section';
 import ReservationFormProvider from './-components/reservation-form-provider';
 import Timer from './-components/timer-section';
 import GymInfo from './-components/gym-info';
-import RecordingButton from './-components/recording-button';
 import RecordingProgress from './-components/progress';
 import RecordingInfo from './-components/recording-info';
 import HistoryList from './-components/history-list';
 import RecordingCancelButton from './-components/recording-cancel-button';
-
-import { HomeRoute } from '@/libs/routes';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { isOverHalfInterval } from '@/libs/recording';
 
 const searchSchema = z.object({
   sendToMeDialogId: z.string().optional(),
@@ -56,25 +49,6 @@ function RouteComponent() {
 }
 
 function RecordingSection() {
-  const now = new Date();
-  const { gymUuid, courtUuid } = HomeRoute.useSearch();
-
-  const [{ data: gym }, { data: court }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
-  });
-
-  const operatingEndDate = new Date();
-  operatingEndDate.setHours(gym.todayOperatingTime.closeHour, 0, 0, 0);
-
-  const isOperatingEnd = isAfter(now, operatingEndDate);
-
-  const isOverHalfTime = isOverHalfInterval({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
-
   return (
     <Section size="1">
       <Flex direction="column" gap="3">
@@ -82,15 +56,12 @@ function RecordingSection() {
           녹화
         </Heading>
         <RecordingInfo />
-        {!isOperatingEnd && <Timer />}
-        {!isOperatingEnd && court.isRecording && <RecordingProgress />}
-        {!isOperatingEnd && !court.isRecording && !isOverHalfTime && (
-          <PhoneNumberInputSection />
-        )}
-        {!isOperatingEnd && !court.isRecording && !isOverHalfTime && (
-          <RecordingButton />
-        )}
-        {court.isRecording && <RecordingCancelButton />}
+        <Timer />
+        <RecordingProgress />
+
+        <PhoneNumberInputSection />
+
+        <RecordingCancelButton />
       </Flex>
     </Section>
   );

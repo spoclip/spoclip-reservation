@@ -4,14 +4,14 @@ import {
   cancelRecording,
   createRecording,
   getRecordingBaseInfo,
-  getRecordingHistory,
+  getCompletedRecording,
   sendToMeRecording,
 } from './service';
 import { recordingQueryKeys } from './key';
 import type {
   CancelRecordingRequest,
   GetRecordingBaseInfoRequest,
-  GetRecordingHistoryRequest,
+  GetCompletedRecordingRequest,
   SendToMeRecordingRequest,
 } from './types';
 
@@ -21,10 +21,12 @@ export function useCreateRecordingQuery() {
   });
 }
 
-export function getRecordingHistoryQuery(params: GetRecordingHistoryRequest) {
+export function getCompletedRecordingQuery(
+  params: GetCompletedRecordingRequest,
+) {
   return queryOptions({
     queryKey: recordingQueryKeys.completed(params),
-    queryFn: () => getRecordingHistory(params),
+    queryFn: () => getCompletedRecording(params),
   });
 }
 
@@ -42,7 +44,7 @@ export function useCancelRecordingMutation() {
 
 export function getRecordingBaseInfoQuery(params: GetRecordingBaseInfoRequest) {
   return queryOptions({
-    queryKey: recordingQueryKeys.active(params),
+    queryKey: recordingQueryKeys.baseInfo(params),
     queryFn: () => getRecordingBaseInfo(params),
   });
 }

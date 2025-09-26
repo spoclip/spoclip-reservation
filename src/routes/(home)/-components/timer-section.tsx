@@ -6,6 +6,7 @@ import { useNow } from '@/hooks/use-now';
 import { getCurrentRecordingEndDate } from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
+import { useManualNow } from '@/stores/now';
 
 export default function Timer() {
   return (
@@ -18,8 +19,8 @@ export default function Timer() {
 }
 
 function NowTimer() {
-  const { now } = useNow({ interval: 1000 });
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
+  const { now } = useManualNow();
 
   const [{ data: gym }, { data: court }] = useSuspenseQueries({
     queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],

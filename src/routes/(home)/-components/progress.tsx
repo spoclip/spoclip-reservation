@@ -1,50 +1,30 @@
 import { Progress } from '@radix-ui/themes';
-import { useSuspenseQueries } from '@tanstack/react-query';
 import { differenceInSeconds } from 'date-fns';
 
-import { useNow } from '@/hooks/use-now';
-import {
-  getCurrentRecordingEndDate,
-  isOverHalfInterval,
-} from '@/libs/recording';
-import { HomeRoute } from '@/libs/routes';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { OperationDays } from '@/services/gym/enum';
+import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
+import { isOverHalfInterval } from '@/libs/recording';
+import { useManualNow } from '@/stores/now';
 
 function RecordingProgress() {
-  const { courtUuid, gymUuid } = HomeRoute.useSearch();
+  const { now } = useManualNow();
+  const { court, gym, baseInfo, currentRecordingEndDate } =
+    useRecordingInfoQuery();
 
-  const [{ data: court }, { data: gym }] = useSuspenseQueries({
-    queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
-  });
-  const { now } = useNow();
+  if (!baseInfo?.isRecording) return null;
 
-  const operationHour = gym.operatingHours.find(
-    (hour) => hour.day === OperationDays[now.getDay()],
+  const max = differenceInSeconds(
+    baseInfo?.recording.triggeredAt,
+    currentRecordingEndDate,
   );
-
-  const operatingStartHour = Number(operationHour?.openTime.split(':')[0]);
-  const operatingEndHour = Number(operationHour?.closeTime.split(':')[0]);
-
-  const endDate = getCurrentRecordingEndDate({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: operatingStartHour,
-    operatingEndHour: operatingEndHour,
-  });
-
-  const TRIGGRED_AT = new Date('2025-09-25T22:00:00');
-
-  const max = differenceInSeconds(TRIGGRED_AT, endDate);
-  const value = differenceInSeconds(now, TRIGGRED_AT);
+  const value = differenceInSeconds(now, baseInfo?.recording.triggeredAt);
 
   const clampedValue = Math.max(0, Math.min(value, max));
 
   const isOverHalf = isOverHalfInterval({
     now,
     recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: operatingStartHour,
-    operatingEndHour: operatingEndHour,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
   return (

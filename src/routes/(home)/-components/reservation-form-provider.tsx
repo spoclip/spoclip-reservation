@@ -15,6 +15,8 @@ import {
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
+import { recordingQueryKeys } from '@/services/recording';
+import { useManualNow } from '@/stores/now';
 
 function ReservationFormProvider({ children }: { children: React.ReactNode }) {
   const { courtUuid, gymUuid } = HomeRoute.useSearch();
@@ -27,6 +29,9 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
 
   const { mutate: createRecording } = useCreateRecordingQuery();
   const queryClient = useQueryClient();
+  const { updateNow } = useManualNow((state) => ({
+    updateNow: state.updateNow,
+  }));
 
   const [{ data: court }, { data: gym }] = useQueries({
     queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
@@ -70,10 +75,10 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
     };
     createRecording(requestData, {
       onSuccess: () => {
-        // @todo. 녹화 정보 API Query key로 수정 필요
         queryClient.invalidateQueries({
-          queryKey: getCourtQuery({ courtUuid }).queryKey,
+          queryKey: recordingQueryKeys.baseInfos(),
         });
+        updateNow();
       },
     });
   };

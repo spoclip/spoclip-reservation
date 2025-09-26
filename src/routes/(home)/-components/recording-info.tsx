@@ -1,38 +1,17 @@
 import { memo } from 'react';
 
 import { Callout } from '@radix-ui/themes';
-import { useQuery, useSuspenseQueries } from '@tanstack/react-query';
 import { formatDate, isAfter } from 'date-fns';
 import { AlertCircle } from 'lucide-react';
 
-import {
-  getCurrentRecordingEndDate,
-  getCurrentRecordingStartDate,
-  isOverHalfInterval,
-} from '@/libs/recording';
-import { HomeRoute } from '@/libs/routes';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { getRecordingBaseInfoQuery } from '@/services/recording/query';
+import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
+import { isOverHalfInterval } from '@/libs/recording';
+import { useManualNow } from '@/stores/now';
 
 export default memo(function RecordingInfo() {
-  const now = new Date();
-
-  const { courtUuid, gymUuid } = HomeRoute.useSearch();
-  const [{ data: court }, { data: gym }] = useSuspenseQueries({
-    queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
-  });
-  const currentRecordingEndDate = getCurrentRecordingEndDate({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
-  const currentRecordingStartDate = getCurrentRecordingStartDate({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
+  const { now } = useManualNow();
+  const { gym, court, currentRecordingEndDate, baseInfo } =
+    useRecordingInfoQuery();
 
   const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
   const isOverHalf = isOverHalfInterval({
@@ -41,18 +20,6 @@ export default memo(function RecordingInfo() {
     operatingStartHour: gym.todayOperatingTime.openHour,
     operatingEndHour: gym.todayOperatingTime.closeHour,
   });
-
-  const { data } = useQuery(
-    getRecordingBaseInfoQuery({
-      courtUuid,
-      gymUuid,
-      startTime: currentRecordingStartDate.toISOString(),
-      endTime: currentRecordingEndDate.toISOString(),
-    }),
-  );
-
-  // when data is undefined, it means there is no recording
-  if (!data) return null;
 
   return (
     <>
@@ -67,7 +34,7 @@ export default memo(function RecordingInfo() {
             </Callout.Root>
           );
         }
-        if (isOverHalf && data.recordingStatus !== 'RECORDING') {
+        if (isOverHalf && !baseInfo?.isRecording) {
           return (
             <Callout.Root color="yellow">
               <Callout.Icon>
@@ -80,7 +47,7 @@ export default memo(function RecordingInfo() {
             </Callout.Root>
           );
         }
-        if (data.recordingStatus === 'RECORDING') {
+        if (baseInfo?.isRecording) {
           return (
             <Callout.Root color="green">
               <Callout.Icon>

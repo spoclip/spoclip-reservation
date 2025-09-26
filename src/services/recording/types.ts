@@ -11,13 +11,13 @@ export type CreateRecordingRequest = {
   endTime: string;
 };
 
-export type GetRecordingHistoryRequest = {
+export type GetCompletedRecordingRequest = {
   gymUuid: string;
   courtUuid: string;
   triggeredAt: string;
 };
 
-export type GetRecordingHistoryResponse = ApiResponse<
+export type GetCompletedRecordingResponse = ApiResponse<
   {
     uuid: string;
     date: string;
@@ -48,15 +48,20 @@ export type GetRecordingBaseInfoRequest = {
   courtUuid: string;
   startTime: string;
   endTime: string;
+  triggeredAt: string;
+  date: string;
 };
 
 export type GetRecordingBaseInfoResponse = ApiResponse<{
-  uuid: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  recordingStatus: 'RECORDING' | 'COMPLETED';
-  expiresAt: string;
-  userName: string;
-  triggeredAt: string;
+  isRecording: boolean;
+  recording: {
+    uuid: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    recordingStatus: 'RECORDING' | 'COMPLETED';
+    expiresAt: string;
+    userName: string;
+    triggeredAt: string;
+  };
 } | null>;

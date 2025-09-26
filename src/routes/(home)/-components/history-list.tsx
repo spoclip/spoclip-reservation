@@ -17,18 +17,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { formatTimeUntilExpiration } from '@/libs/date-utils';
-import { useNow } from '@/hooks/use-now';
-import type { GetRecordingHistoryResponse } from '@/services/recording/types';
+import type { GetCompletedRecordingResponse } from '@/services/recording/types';
 import { HomeRoute } from '@/libs/routes';
 import {
-  getRecordingHistoryQuery,
+  getCompletedRecordingQuery,
   useSendToMeRecordingMutation,
 } from '@/services/recording/query';
+import { useManualNow } from '@/stores/now';
 
 function HistoryList() {
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
   const { data } = useSuspenseQuery(
-    getRecordingHistoryQuery({
+    getCompletedRecordingQuery({
       gymUuid,
       courtUuid,
       triggeredAt: new Date().toISOString(),
@@ -58,7 +58,7 @@ function HistoryList() {
 function HistoryItem({
   item,
 }: {
-  item: GetRecordingHistoryResponse['data'][number];
+  item: GetCompletedRecordingResponse['data'][number];
 }) {
   return (
     <Card>
@@ -82,7 +82,7 @@ function HistoryItem({
 }
 
 function ExpirationTime({ expiresAt }: { expiresAt: string }) {
-  const { now } = useNow();
+  const { now } = useManualNow();
   const expirationTime = formatTimeUntilExpiration(new Date(expiresAt), now);
 
   return (

@@ -1,81 +1,54 @@
+import { useState } from 'react';
+
 import { Button, Dialog, Flex } from '@radix-ui/themes';
-import {
-  useQuery,
-  useQueryClient,
-  useSuspenseQueries,
-} from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Box } from '@radix-ui/themes/src/index.js';
 
-import {
-  getRecordingBaseInfoQuery,
-  useCancelRecordingMutation,
-} from '@/services/recording/query';
+import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
+import { useCancelRecordingMutation } from '@/services/recording/query';
 import { HomeRoute } from '@/libs/routes';
-import {
-  getCurrentRecordingEndDate,
-  getCurrentRecordingStartDate,
-} from '@/libs/recording';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { recordingQueryKeys } from '@/services/recording/key';
+import { useManualNow } from '@/stores/now';
 
 function RecordingCancelButton() {
   const { mutate: cancelRecording } = useCancelRecordingMutation();
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
+  const [isOpen, setIsOpen] = useState(false);
 
+  const { updateNow } = useManualNow((state) => ({
+    updateNow: state.updateNow,
+  }));
   const queryClient = useQueryClient();
-  const [{ data: gym }, { data: court }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
-  });
-
-  const startTime = getCurrentRecordingStartDate({
-    now: new Date(),
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
-  const endTime = getCurrentRecordingEndDate({
-    now: new Date(),
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
-
-  const { data: recordingBaseInfo } = useQuery(
-    getRecordingBaseInfoQuery({
-      gymUuid,
-      courtUuid,
-      startTime: startTime.toISOString(),
-      endTime: endTime.toISOString(),
-    }),
-  );
+  const { baseInfo } = useRecordingInfoQuery();
 
   const onClick = () => {
-    if (!recordingBaseInfo?.uuid) {
-      toast.error('녹화 기본 정보를 받아오는데 실패했어요.');
+    if (!baseInfo?.recording?.uuid) {
+      toast.error(
+        '녹화 기본 정보를 받아오는데 실패했어요.\n새로고침 후 다시 시도해주세요',
+      );
       return;
     }
 
     cancelRecording(
-      { uuid: '0199858d-055a-7152-9eea-f4b49cfe48a1', gymUuid, courtUuid },
+      { uuid: baseInfo.recording.uuid, gymUuid, courtUuid },
       {
         onSuccess: () => {
           toast.success('녹화가 취소되었어요.');
           queryClient.invalidateQueries({
-            queryKey: recordingQueryKeys.active({
-              gymUuid,
-              courtUuid,
-              startTime: startTime.toISOString(),
-              endTime: endTime.toISOString(),
-            }),
+            queryKey: recordingQueryKeys.baseInfos(),
           });
+          setIsOpen(false);
+          updateNow();
         },
       },
     );
   };
 
+  if (!baseInfo?.isRecording) return null;
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
         <Box ml="auto">
           <Button variant="soft" color="red">

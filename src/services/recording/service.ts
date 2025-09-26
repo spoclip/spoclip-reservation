@@ -1,11 +1,11 @@
 import type {
   CancelRecordingRequest,
   CreateRecordingRequest,
-  GetRecordingHistoryRequest,
-  GetRecordingHistoryResponse,
   SendToMeRecordingRequest,
   GetRecordingBaseInfoRequest,
   GetRecordingBaseInfoResponse,
+  GetCompletedRecordingRequest,
+  GetCompletedRecordingResponse,
 } from './types';
 
 import api from '@/libs/api';
@@ -14,8 +14,10 @@ export function createRecording(data: CreateRecordingRequest) {
   return api.post('/recordings', data);
 }
 
-export async function getRecordingHistory(params: GetRecordingHistoryRequest) {
-  const { data } = await api.get<GetRecordingHistoryResponse>(
+export async function getCompletedRecording(
+  params: GetCompletedRecordingRequest,
+) {
+  const { data } = await api.get<GetCompletedRecordingResponse>(
     '/recordings/completed',
     {
       params,
@@ -48,8 +50,6 @@ export async function getRecordingBaseInfo(
     `/recordings/active`,
     {
       ...params,
-      triggeredAt: new Date().toISOString(),
-      date: new Date().toISOString(),
     },
   );
   return data?.data;

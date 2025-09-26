@@ -1,17 +1,12 @@
 import { Box, Button } from '@radix-ui/themes';
-import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { useNow } from '@/hooks/use-now';
+import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { isOverHalfInterval } from '@/libs/recording';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
-import { HomeRoute } from '@/libs/routes';
+import { useManualNow } from '@/stores/now';
 
 function RecordingButton() {
-  const { now } = useNow();
-  const { gymUuid, courtUuid } = HomeRoute.useSearch();
-  const [{ data: gym }, { data: court }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
-  });
+  const { now } = useManualNow();
+  const { gym, court, baseInfo } = useRecordingInfoQuery();
 
   const isOverHalfTime = isOverHalfInterval({
     now: now,
@@ -20,9 +15,11 @@ function RecordingButton() {
     operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
+  if (baseInfo?.isRecording) return;
+
   return (
     <Box flexGrow="1" asChild>
-      <Button size="4" disabled={isOverHalfTime}>
+      <Button type="submit" size="4" disabled={isOverHalfTime}>
         녹화하기
       </Button>
     </Box>
