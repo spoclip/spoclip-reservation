@@ -26,7 +26,6 @@ export type GetRecordingHistoryResponse = ApiResponse<
     recordingStatus: 'RECORDING' | 'COMPLETED';
     expiresAt: string;
     userName: string;
-    triggeredAt: string;
   }[]
 >;
 

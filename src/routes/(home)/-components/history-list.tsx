@@ -11,18 +11,18 @@ import {
   Card,
   Dialog,
   Flex,
-  Portal,
   Text,
   TextField,
 } from '@radix-ui/themes';
 import { differenceInMinutes, formatDate } from 'date-fns';
 import { useNow } from '@/hooks/use-now';
 import { formatTimeUntilExpiration } from '@/libs/date-utils';
-import { ChevronRight, Smartphone } from 'lucide-react';
+import { ChevronRight, InfoIcon, Smartphone } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod/v3';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 function HistoryList() {
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
@@ -33,6 +33,17 @@ function HistoryList() {
       triggeredAt: new Date().toISOString(),
     }),
   );
+
+  if (data.length === 0) {
+    return (
+      <Flex my="8" mx="auto" align="center" gap="2">
+        <Text color="gray" asChild>
+          <InfoIcon size={20} />
+        </Text>
+        <Text mx="auto">녹화 기록이 없습니다.</Text>
+      </Flex>
+    );
+  }
 
   return (
     <div>
@@ -62,10 +73,7 @@ function HistoryItem({
             {`(${differenceInMinutes(item.endTime, item.startTime)}분)`}
           </Text>
           <ExpirationTime expiresAt={item.expiresAt} />
-          <SendToMeDialogButton
-            uuid={item.uuid}
-            triggerdAt={item.triggeredAt}
-          />
+          <SendToMeDialogButton uuid={item.uuid} />
         </Flex>
       </Flex>
     </Card>
@@ -85,52 +93,65 @@ function ExpirationTime({ expiresAt }: { expiresAt: string }) {
 
 type SendToMeDialogButtonProps = {
   uuid: string;
-  triggerdAt: string;
 };
 
 const sendToMeFormSchema = z.object({
   phoneNumber: z.string().min(1),
 });
 
-function SendToMeDialogButton({ uuid, triggerdAt }: SendToMeDialogButtonProps) {
+function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
   const navigate = useNavigate();
   const { sendToMeDialogId } = HomeRoute.useSearch();
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
-  const { control, handleSubmit, watch } = useForm<
-    z.infer<typeof sendToMeFormSchema>
-  >({
-    resolver: zodResolver(sendToMeFormSchema),
-    defaultValues: {
-      phoneNumber: '',
+  const { control, handleSubmit } = useForm<z.infer<typeof sendToMeFormSchema>>(
+    {
+      resolver: zodResolver(sendToMeFormSchema),
+      defaultValues: {
+        phoneNumber: '',
+      },
     },
-  });
+  );
 
   const { mutate } = useSendToMeRecordingMutation();
   const onSubmit = (data: z.infer<typeof sendToMeFormSchema>) => {
     console.log(data);
-    mutate({
-      uuid,
-      gymUuid,
-      courtUuid,
-      triggeredAt: new Date().toISOString(),
-      phoneNumber: data.phoneNumber.replaceAll(' ', ''),
-    });
-  };
-
-  return (
-    <Dialog.Root
-      open={sendToMeDialogId === uuid}
-      onOpenChange={(open) => {
-        if (open) {
-          navigate({ to: '.', search: { sendToMeDialogId: uuid } });
-        } else {
+    mutate(
+      {
+        uuid,
+        gymUuid,
+        courtUuid,
+        triggeredAt: new Date().toISOString(),
+        phoneNumber: data.phoneNumber.replaceAll(' ', ''),
+      },
+      {
+        onSuccess: () => {
           navigate({
             to: '.',
             search: { sendToMeDialogId: undefined },
             replace: true,
           });
-        }
-      }}
+          toast.success('나에게 보내기 성공!');
+        },
+      },
+    );
+  };
+
+  const onDialogOpenChange = (open: boolean) => {
+    if (open) {
+      navigate({ to: '.', search: { sendToMeDialogId: uuid } });
+    } else {
+      navigate({
+        to: '.',
+        search: { sendToMeDialogId: undefined },
+        replace: true,
+      });
+    }
+  };
+
+  return (
+    <Dialog.Root
+      open={sendToMeDialogId === uuid}
+      onOpenChange={onDialogOpenChange}
     >
       <Box asChild>
         <Dialog.Trigger>
