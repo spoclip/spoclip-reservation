@@ -11,7 +11,7 @@ import {
   getCurrentRecordingEndDate,
   getCurrentRecordingStartDate,
 } from '@/libs/recording';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
@@ -26,6 +26,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
   });
 
   const { mutate: createRecording } = useCreateRecordingQuery();
+  const queryClient = useQueryClient();
 
   const [{ data: court }, { data: gym }] = useQueries({
     queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
@@ -68,7 +69,14 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
       triggeredAt: now.toISOString(),
       phoneNumber: data.phoneNumber.replaceAll(' ', ''),
     };
-    createRecording(requestData);
+    createRecording(requestData, {
+      onSuccess: () => {
+        // @todo. 녹화 정보 API Query key로 수정 필요
+        queryClient.invalidateQueries({
+          queryKey: getCourtQuery({ courtUuid }).queryKey,
+        });
+      },
+    });
   };
 
   return (

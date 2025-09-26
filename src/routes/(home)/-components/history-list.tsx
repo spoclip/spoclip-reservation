@@ -14,8 +14,8 @@ import {
 import { differenceInMinutes, formatDate } from 'date-fns';
 import { useNow } from '@/hooks/use-now';
 import { formatTimeUntilExpiration } from '@/libs/date-utils';
-import { ChevronRight, Phone, Smartphone } from 'lucide-react';
-import { Icon } from '@radix-ui/themes/components/callout';
+import { ChevronRight, Smartphone } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 
 function HistoryList() {
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
@@ -55,7 +55,7 @@ function HistoryItem({
             {`(${differenceInMinutes(item.endTime, item.startTime)}분)`}
           </Text>
           <ExpirationTime expiresAt={item.expiresAt} />
-          <SendToMeDialogButton />
+          <SendToMeDialogButton uuid={item.uuid} />
         </Flex>
       </Flex>
     </Card>
@@ -73,9 +73,29 @@ function ExpirationTime({ expiresAt }: { expiresAt: string }) {
   );
 }
 
-function SendToMeDialogButton() {
+type SendToMeDialogButtonProps = {
+  uuid: string;
+};
+
+function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
+  const navigate = useNavigate();
+  const { sendToMeDialogId } = HomeRoute.useSearch();
+
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      open={sendToMeDialogId === uuid}
+      onOpenChange={(open) => {
+        if (open) {
+          navigate({ to: '.', search: { sendToMeDialogId: uuid } });
+        } else {
+          navigate({
+            to: '.',
+            search: { sendToMeDialogId: undefined },
+            replace: true,
+          });
+        }
+      }}
+    >
       <Box asChild>
         <Dialog.Trigger>
           <Button type="button" variant="soft" size="3">

@@ -15,9 +15,16 @@ import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { isAfter } from 'date-fns';
 import { isOverHalfInterval } from '@/libs/recording';
 import HistoryList from './-components/history-list';
+import { zodValidator } from '@tanstack/zod-adapter';
+import z from 'zod/v3';
+
+const searchSchema = z.object({
+  sendToMeDialogId: z.string().optional(),
+});
 
 export const Route = createFileRoute('/(home)/')({
   component: RouteComponent,
+  validateSearch: zodValidator(searchSchema),
 });
 
 function RouteComponent() {
