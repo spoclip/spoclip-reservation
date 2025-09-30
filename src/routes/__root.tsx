@@ -1,4 +1,4 @@
-import { Box, Container, Text } from '@radix-ui/themes';
+import { Box, Container, Section, Text } from '@radix-ui/themes';
 import {
   Outlet,
   SearchParamError,
@@ -35,14 +35,6 @@ function Root() {
   );
 }
 
-/**
- * 자동 쿼리 무효화를 담당하는 컴포넌트
- *
- * 다음 조건에서 recording 쿼리를 자동으로 무효화합니다:
- * - 운영 시간 외: 운영 시작 시간이 지났을 때
- * - 운영 시간 내: 녹화 종료 시간이 지났을 때
- */
-
 function ErrorComponent({ error }: { error: Error }) {
   if (error instanceof SearchParamError) {
     return (
@@ -55,5 +47,14 @@ function ErrorComponent({ error }: { error: Error }) {
       </Box>
     );
   }
-  return <div>{error.message}</div>;
+  return (
+    <>
+      <Header />
+      <Container width="100%" maxWidth="600px" p="4" mt="7">
+        <Section>
+          <Text>{error.message}</Text>
+        </Section>
+      </Container>
+    </>
+  );
 }

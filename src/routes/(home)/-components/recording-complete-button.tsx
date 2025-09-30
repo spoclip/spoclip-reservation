@@ -17,7 +17,7 @@ function RecordingCompleteButton() {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <Button type="button">
+        <Button type="button" disabled={!isOverHalf}>
           {isOverHalf
             ? '여기까지 가져가기'
             : `${court.recordingInterval / 2}분 부터 가져갈 수 있어요`}
@@ -37,12 +37,7 @@ function CompleteRecordingDialogContent() {
   const { baseInfo } = useRecordingInfoQuery();
 
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm<FormSchema>({
+  const { control, handleSubmit } = useForm<FormSchema>({
     defaultValues: {
       phoneNumber: '',
     },
@@ -52,7 +47,6 @@ function CompleteRecordingDialogContent() {
   const { mutate } = useCompleteRecordingMutation();
 
   const onSubmit = (data: FormSchema) => {
-    console.log(data);
     if (!baseInfo) return;
     mutate({
       uuid: baseInfo.recording.uuid,
@@ -62,8 +56,6 @@ function CompleteRecordingDialogContent() {
       phoneNumber: data.phoneNumber.replaceAll(' ', ''),
     });
   };
-
-  console.log(errors, watch('phoneNumber'));
 
   return (
     <Dialog.Content>

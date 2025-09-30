@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { isAfter } from 'date-fns';
+import { addMinutes, isAfter } from 'date-fns';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { useManualNow } from '@/stores/now';
@@ -13,12 +13,21 @@ import { recordingQueryKeys } from '@/services/recording';
  * - 운영 시간 내: 녹화 종료 시간이 지나면 무효화
  */
 export function useAutoInvalidation() {
-  const { currentRecordingEndDate, gym, outOfOperatingTime } =
-    useRecordingInfoQuery();
+  const {
+    currentRecordingEndDate,
+    gym,
+    outOfOperatingTime,
+    court,
+    currentRecordingStartDate,
+  } = useRecordingInfoQuery();
   const queryClient = useQueryClient();
   const { updateNow } = useManualNow((state) => ({
     updateNow: state.updateNow,
   }));
+
+  console.log(
+    addMinutes(currentRecordingStartDate, court.recordingInterval / 2),
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,7 +46,7 @@ export function useAutoInvalidation() {
         return isAfterOperatingStartTime(now);
       }
 
-      return isAfterRecordingEndTime(now);
+      return isAfterRecordingEndTime(now) || isAfterHalfRecordingTime(now);
     }
 
     function isAfterOperatingStartTime(now: Date): boolean {
@@ -47,6 +56,14 @@ export function useAutoInvalidation() {
 
     function isAfterRecordingEndTime(now: Date): boolean {
       return isAfter(now, currentRecordingEndDate);
+    }
+
+    function isAfterHalfRecordingTime(now: Date): boolean {
+      const halfRecordingTime = addMinutes(
+        currentRecordingStartDate,
+        court.recordingInterval / 2,
+      );
+      return isAfter(now, halfRecordingTime);
     }
 
     function invalidateRecordingQueries(): void {
@@ -60,5 +77,7 @@ export function useAutoInvalidation() {
     updateNow,
     gym,
     outOfOperatingTime,
+    court,
+    currentRecordingStartDate,
   ]);
 }

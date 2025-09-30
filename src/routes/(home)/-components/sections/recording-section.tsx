@@ -31,8 +31,10 @@ function RecordingSectionContent() {
         <RecordingProgress />
 
         <ReservationFormProvider>
-          <PhoneNumberInputSection />
-          <RecordingButton />
+          <Flex direction="column" gap="2">
+            <PhoneNumberInputSection />
+            <RecordingButton />
+          </Flex>
         </ReservationFormProvider>
         <Flex gap="2" justify="end">
           <RecordingCancelButton />
