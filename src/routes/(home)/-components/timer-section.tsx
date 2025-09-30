@@ -1,9 +1,8 @@
 import { Flex, Text } from '@radix-ui/themes';
-import { formatDate, isAfter } from 'date-fns';
+import { formatDate } from 'date-fns';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { useNow } from '@/hooks/use-now';
-import { useManualNow } from '@/stores/now';
 
 export default function Timer() {
   const { outOfOperatingTime } = useRecordingInfoQuery();
@@ -20,22 +19,13 @@ export default function Timer() {
 }
 
 function StartTimer() {
-  const { now } = useManualNow();
-  const { baseInfo, currentRecordingEndDate } = useRecordingInfoQuery();
-
-  const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
-
-  const displayedDate = isAfterOperationEnd ? currentRecordingEndDate : now;
+  const { baseInfo } = useRecordingInfoQuery();
 
   if (!baseInfo?.isRecording) return <NowTimer />;
 
   return (
-    <Text
-      size="7"
-      weight="bold"
-      style={{ color: isAfterOperationEnd ? 'var(--gray-8)' : 'inherit' }}
-    >
-      {formatDate(displayedDate, 'HH:mm:ss')}
+    <Text size="7" weight="bold">
+      {formatDate(baseInfo?.recording.triggeredAt, 'HH시 mm분')}
     </Text>
   );
 }

@@ -65,3 +65,22 @@ export type GetRecordingBaseInfoResponse = ApiResponse<{
     triggeredAt: string;
   };
 } | null>;
+
+export type CompleteRecordingRequest = {
+  uuid: string;
+  gymUuid: string;
+  courtUuid: string;
+  triggeredAt: string;
+  phoneNumber: string;
+};
+
+export type CompleteRecordingResponse = ApiResponse<{
+  uuid: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  recordingStatus: 'RECORDING';
+  expiresAt: string;
+  userName: string;
+  triggeredAt: string;
+}>;

@@ -1,7 +1,8 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueries, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
+import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import {
   createRecordingFormSchema,
   type CreateRecordingFormSchema,
@@ -12,7 +13,6 @@ import {
   getCurrentRecordingEndDate,
   getCurrentRecordingStartDate,
 } from '@/libs/recording';
-import { getCourtQuery, getGymQuery } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
 import { recordingQueryKeys } from '@/services/recording';
@@ -33,9 +33,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
     updateNow: state.updateNow,
   }));
 
-  const [{ data: court }, { data: gym }] = useQueries({
-    queries: [getCourtQuery({ courtUuid }), getGymQuery({ gymUuid })],
-  });
+  const { court, gym } = useRecordingInfoQuery();
 
   const onSubmit = (data: CreateRecordingFormSchema) => {
     if (!court?.recordingInterval || !gym?.operatingHours) {

@@ -42,7 +42,9 @@ export default memo(function RecordingInfo() {
               <Callout.Icon>
                 <AlertCircle size={16} />
               </Callout.Icon>
-              <Callout.Text>녹화 중입니다.</Callout.Text>
+              <Callout.Text>
+                {baseInfo.recording.userName}님이 녹화 중입니다.
+              </Callout.Text>
             </Callout.Root>
           );
         }

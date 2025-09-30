@@ -1,7 +1,9 @@
 import { z } from 'zod/v3';
 
+import { mobilePhoneSchema } from '@/libs/phone-validation';
+
 export const createRecordingFormSchema = z.object({
-  phoneNumber: z.string().min(1),
+  phoneNumber: mobilePhoneSchema,
 });
 
 export type CreateRecordingFormSchema = z.infer<

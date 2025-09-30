@@ -6,6 +6,7 @@ import {
   getRecordingBaseInfo,
   getCompletedRecording,
   sendToMeRecording,
+  completeRecording,
 } from './service';
 import { recordingQueryKeys } from './key';
 import type {
@@ -46,5 +47,11 @@ export function getRecordingBaseInfoQuery(params: GetRecordingBaseInfoRequest) {
   return queryOptions({
     queryKey: recordingQueryKeys.baseInfo(params),
     queryFn: () => getRecordingBaseInfo(params),
+  });
+}
+
+export function useCompleteRecordingMutation() {
+  return useMutation({
+    mutationFn: completeRecording,
   });
 }

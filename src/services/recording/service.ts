@@ -6,6 +6,8 @@ import type {
   GetRecordingBaseInfoResponse,
   GetCompletedRecordingRequest,
   GetCompletedRecordingResponse,
+  CompleteRecordingResponse,
+  CompleteRecordingRequest,
 } from './types';
 
 import api from '@/libs/api';
@@ -51,6 +53,17 @@ export async function getRecordingBaseInfo(
     {
       ...params,
     },
+  );
+  return data?.data;
+}
+
+export async function completeRecording({
+  uuid,
+  ...params
+}: CompleteRecordingRequest) {
+  const { data } = await api.post<CompleteRecordingResponse>(
+    `/recordings/${uuid}/complete`,
+    params,
   );
   return data?.data;
 }

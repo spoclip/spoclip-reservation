@@ -1,10 +1,7 @@
-import { Suspense } from 'react';
-
-import { Flex, Skeleton, Text } from '@radix-ui/themes';
+import { Flex, Text } from '@radix-ui/themes';
 import { Callout } from '@radix-ui/themes/src/index.js';
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { Clock, MapPin } from 'lucide-react';
-import { ErrorBoundary } from 'react-error-boundary';
 
 import { getGymQuery } from '@/services/gym/query';
 import { OperationDay } from '@/services/gym/enum';
@@ -13,11 +10,7 @@ import { HomeRoute } from '@/libs/routes';
 export default function GymInfo() {
   return (
     <GymInfoSectionWrapper>
-      <GymInfoSectionErrorBoundary>
-        <GymInfoSectionSuspense>
-          <GymInfoSectionContent />
-        </GymInfoSectionSuspense>
-      </GymInfoSectionErrorBoundary>
+      <GymInfoSectionContent />
     </GymInfoSectionWrapper>
   );
 }
@@ -27,35 +20,6 @@ function GymInfoSectionWrapper({ children }: { children: React.ReactNode }) {
     <Flex direction="column" gap="2">
       {children}
     </Flex>
-  );
-}
-
-function GymInfoSectionSuspense({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense
-      fallback={
-        <Callout.Text>
-          <Skeleton>loading...</Skeleton>
-          <Skeleton>loading...</Skeleton>
-        </Callout.Text>
-      }
-    >
-      {children}
-    </Suspense>
-  );
-}
-
-function GymInfoSectionErrorBoundary({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <ErrorBoundary
-      fallback={<Text>체육관 정보를 불러오는 중 오류가 발생했어요</Text>}
-    >
-      {children}
-    </ErrorBoundary>
   );
 }
 
