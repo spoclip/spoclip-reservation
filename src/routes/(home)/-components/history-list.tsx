@@ -24,6 +24,7 @@ import {
   useSendToMeRecordingMutation,
 } from '@/services/recording/query';
 import { useManualNow } from '@/stores/now';
+import { formatPhoneNumber } from '@/libs/phone-validation';
 
 function HistoryList() {
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
@@ -174,8 +175,13 @@ function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
                 <TextField.Root
                   size="3"
                   type="tel"
-                  placeholder="010-0000-0000"
+                  placeholder="휴대폰 번호"
+                  maxLength={13}
                   {...field}
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    field.onChange(formatPhoneNumber(value));
+                  }}
                 >
                   <TextField.Slot>
                     <Smartphone />

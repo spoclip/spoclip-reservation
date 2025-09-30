@@ -20,11 +20,12 @@ import { useManualNow } from '@/stores/now';
 
 function ReservationFormProvider({ children }: { children: React.ReactNode }) {
   const { courtUuid, gymUuid } = HomeRoute.useSearch();
-  const form = useForm({
+  const form = useForm<CreateRecordingFormSchema>({
     defaultValues: {
       phoneNumber: '',
     },
     resolver: zodResolver(createRecordingFormSchema),
+    mode: 'onChange',
   });
 
   const { mutate: createRecording } = useCreateRecordingQuery();

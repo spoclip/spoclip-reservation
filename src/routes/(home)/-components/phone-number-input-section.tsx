@@ -6,12 +6,12 @@ import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-
 import type { CreateRecordingFormSchema } from '@/routes/(home)/-types/recording';
 import { isOverHalfInterval } from '@/libs/recording';
 import { useManualNow } from '@/stores/now';
+import { formatPhoneNumber } from '@/libs/phone-validation';
 
 function PhoneNumberInputSection() {
   const form = useFormContext<CreateRecordingFormSchema>();
   const { now } = useManualNow();
-  const { baseInfo, court, gym } = useRecordingInfoQuery();
-  const isRecording = baseInfo?.isRecording;
+  const { baseInfo, court, gym, outOfOperatingTime } = useRecordingInfoQuery();
 
   const isOverHalf = isOverHalfInterval({
     now,
@@ -20,7 +20,7 @@ function PhoneNumberInputSection() {
     operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
-  if (isRecording || isOverHalf) return null;
+  if (baseInfo?.isRecording || isOverHalf || outOfOperatingTime) return null;
 
   return (
     <Controller
@@ -32,8 +32,13 @@ function PhoneNumberInputSection() {
             type="tel"
             variant="soft"
             size="3"
-            placeholder="010-0000-0000"
+            placeholder="휴대폰 번호"
+            maxLength={13}
             {...field}
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              field.onChange(formatPhoneNumber(value));
+            }}
           >
             <TextField.Slot>
               <Smartphone />
