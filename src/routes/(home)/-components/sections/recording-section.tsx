@@ -56,8 +56,8 @@ function RecordingSectionSuspense({ children }: { children: React.ReactNode }) {
             <Heading as="h2" size="4">
               녹화
             </Heading>
-            <Skeleton>loading...</Skeleton>
-            <Skeleton>loading...</Skeleton>
+            <Skeleton width="100px" height="20px" />
+            <Skeleton width="100%" height="50px" />
           </Flex>
         </Section>
       }

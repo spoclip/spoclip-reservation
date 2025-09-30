@@ -11,7 +11,14 @@ function GymSection() {
         <Heading as="h2" size="4">
           체육관 정보
         </Heading>
-        <Suspense fallback={<Skeleton>loading...</Skeleton>}>
+        <Suspense
+          fallback={
+            <>
+              <Skeleton width="100px" height="20px" />
+              <Skeleton width="120px" height="20px" />
+            </>
+          }
+        >
           <GymInfo />
         </Suspense>
       </Flex>
