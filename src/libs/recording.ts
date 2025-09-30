@@ -1,10 +1,4 @@
-import {
-  addMinutes,
-  isAfter,
-  isBefore,
-  isSameSecond,
-  subMinutes,
-} from 'date-fns';
+import { addMinutes, isAfter, subMinutes } from 'date-fns';
 
 import type { GetGymResponse } from '@/services/gym';
 import { OperationDays } from '@/services/gym/enum';
@@ -33,11 +27,7 @@ export function getCurrentRecordingEndDate({
       nextRecordingEndDate,
       recordingIntervalInMinute,
     );
-
-    if (isBefore(now, nextRecordingEndDate)) {
-      break;
-    }
-  } while (isBefore(nextRecordingEndDate, operationEndDate));
+  } while (isAfter(now, nextRecordingEndDate));
 
   return nextRecordingEndDate;
 }
@@ -59,20 +49,16 @@ export function getCurrentRecordingStartDate({
   const operationEndDate = new Date();
   operationEndDate.setHours(operatingEndHour, 0, 0, 0);
 
-  let currentRecordingStartDate: Date | null = operationStartDate;
+  let currentRecordingStartDate: Date = operationEndDate;
 
-  while (
-    (isSameSecond(now, currentRecordingStartDate) ||
-      isAfter(now, currentRecordingStartDate)) &&
-    isAfter(currentRecordingStartDate, operationEndDate)
-  ) {
-    currentRecordingStartDate = addMinutes(
+  do {
+    currentRecordingStartDate = subMinutes(
       currentRecordingStartDate,
       recordingIntervalInMinute,
     );
-  }
+  } while (isAfter(currentRecordingStartDate, now));
 
-  return subMinutes(currentRecordingStartDate, recordingIntervalInMinute);
+  return currentRecordingStartDate;
 }
 
 export function isOverHalfInterval({
