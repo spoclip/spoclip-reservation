@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { addMinutes, isAfter } from 'date-fns';
@@ -25,22 +25,9 @@ export function useAutoInvalidation() {
     updateNow: state.updateNow,
   }));
 
-  console.log(
-    addMinutes(currentRecordingStartDate, court.recordingInterval / 2),
-  );
+  const lastInvalidationTime = useRef<Date>(new Date());
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-
-      if (shouldInvalidateQueries(now)) {
-        invalidateRecordingQueries();
-        updateNow();
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-
     function shouldInvalidateQueries(now: Date): boolean {
       if (outOfOperatingTime) {
         return isAfterOperatingStartTime(now);
@@ -63,7 +50,13 @@ export function useAutoInvalidation() {
         currentRecordingStartDate,
         court.recordingInterval / 2,
       );
-      return isAfter(now, halfRecordingTime);
+
+      const isUpdated = isAfter(
+        lastInvalidationTime.current,
+        halfRecordingTime,
+      );
+
+      return isAfter(now, halfRecordingTime) && !isUpdated;
     }
 
     function invalidateRecordingQueries(): void {
@@ -71,6 +64,18 @@ export function useAutoInvalidation() {
         queryKey: recordingQueryKeys.all,
       });
     }
+
+    const interval = setInterval(() => {
+      const now = new Date();
+
+      if (shouldInvalidateQueries(now)) {
+        invalidateRecordingQueries();
+        updateNow();
+        lastInvalidationTime.current = now;
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [
     currentRecordingEndDate,
     queryClient,

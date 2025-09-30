@@ -13,10 +13,12 @@ import { useManualNow } from '@/stores/now';
 export function useRecordingInfoQuery() {
   const { now } = useManualNow();
   const { courtUuid, gymUuid } = HomeRoute.useSearch();
-  const [{ data: gym }, { data: court }] = useSuspenseQueries({
+  const [gymQuery, courtQuery] = useSuspenseQueries({
     queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
   });
 
+  const gym = gymQuery.data;
+  const court = courtQuery.data;
   const currentRecordingStartDate = getCurrentRecordingStartDate({
     now,
     recordingIntervalInMinute: court.recordingInterval,
@@ -30,7 +32,7 @@ export function useRecordingInfoQuery() {
     operatingEndHour: gym.todayOperatingTime.closeHour,
   });
 
-  const { data: baseInfo } = useSuspenseQuery(
+  const baseInfoQuery = useSuspenseQuery(
     getRecordingBaseInfoQuery({
       courtUuid,
       gymUuid,
@@ -40,6 +42,7 @@ export function useRecordingInfoQuery() {
       date: now.toISOString(),
     }),
   );
+  const baseInfo = baseInfoQuery.data;
 
   const outOfOperatingTime =
     now.getHours() < gym.todayOperatingTime.openHour ||
@@ -60,5 +63,8 @@ export function useRecordingInfoQuery() {
     currentRecordingEndDate,
     outOfOperatingTime,
     isOverHalf,
+    baseInfoQuery,
+    gymQuery,
+    courtQuery,
   };
 }

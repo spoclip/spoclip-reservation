@@ -3,7 +3,7 @@ import { Callout } from '@radix-ui/themes/src/index.js';
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { Clock, MapPin } from 'lucide-react';
 
-import { getGymQuery } from '@/services/gym/query';
+import { getCourtQuery, getGymQuery } from '@/services/gym/query';
 import { OperationDay } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
 
@@ -24,9 +24,9 @@ function GymInfoSectionWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function GymInfoSectionContent() {
-  const { gymUuid } = HomeRoute.useSearch();
-  const [{ data: gym }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid })],
+  const { gymUuid, courtUuid } = HomeRoute.useSearch();
+  const [{ data: gym }, { data: court }] = useSuspenseQueries({
+    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
   });
 
   const operationHour = gym.operatingHours.find(
@@ -39,7 +39,9 @@ function GymInfoSectionContent() {
         <Callout.Icon>
           <MapPin size={14} />
         </Callout.Icon>
-        <Text size="2">{gym.krName} </Text>
+        <Text size="2">
+          {gym.krName}, {court.alias}
+        </Text>
       </Flex>
       <Flex gap="2">
         <Callout.Icon>

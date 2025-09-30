@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { Flex, Heading, Section, Skeleton } from '@radix-ui/themes';
 
+import Clock from '@/routes/(home)/-components/clock';
 import RecordingInfo from '@/routes/(home)/-components/recording-info';
 import Timer from '@/routes/(home)/-components/timer-section';
 import RecordingProgress from '@/routes/(home)/-components/progress';
@@ -26,6 +27,7 @@ function RecordingSectionContent() {
         <Heading as="h2" size="4">
           녹화
         </Heading>
+        <Clock />
         <RecordingInfo />
         <Timer />
         <RecordingProgress />

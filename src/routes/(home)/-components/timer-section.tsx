@@ -5,9 +5,10 @@ import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-
 import { useNow } from '@/hooks/use-now';
 
 export default function Timer() {
-  const { outOfOperatingTime, isOverHalf } = useRecordingInfoQuery();
+  const { outOfOperatingTime, baseInfo, isOverHalf } = useRecordingInfoQuery();
 
-  if (outOfOperatingTime || isOverHalf) return null;
+  if (!baseInfo?.isRecording && !isOverHalf) return null;
+  if (outOfOperatingTime) return null;
 
   return (
     <Flex mx="auto" width="100%" justify="between" gap="1" align="center">
