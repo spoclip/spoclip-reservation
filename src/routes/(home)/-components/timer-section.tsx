@@ -13,7 +13,7 @@ export default function Timer() {
   return (
     <Flex mx="auto" width="100%" justify="between" gap="1" align="center">
       <StartTimer />
-      <Text size="5">~</Text>
+      <Text size="4">~</Text>
       <EndTimer />
     </Flex>
   );
@@ -25,7 +25,7 @@ function StartTimer() {
   if (!baseInfo?.isRecording) return <NowTimer />;
 
   return (
-    <Text size="7" weight="bold">
+    <Text size="6" weight="bold">
       {formatDate(baseInfo?.recording.triggeredAt, 'HH시 mm분')}
     </Text>
   );
