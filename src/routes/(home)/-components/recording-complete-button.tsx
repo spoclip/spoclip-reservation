@@ -24,7 +24,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 function RecordingCompleteButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const { baseInfo, court, isOverHalf, currentRecordingStartDate } =
+  const { baseInfo, court, currentRecordingStartDate } =
     useRecordingInfoQuery();
   const { now } = useIntervalNow();
 
@@ -63,27 +63,34 @@ function RecordingCompleteButton() {
 
   if (!baseInfo?.isRecording) return null;
 
-  const halfRecordingTime = addMinutes(
+  const minimumRecordingTime = addMinutes(
+    baseInfo.recording.triggeredAt,
+    MIN_RECORDING_DURATION_IN_MINUTES,
+  );
+  const halfIntervalTime = addMinutes(
     currentRecordingStartDate,
     court.recordingInterval / 2,
   );
-  const isOver10Minutes = isAfter(
-    now,
-    addMinutes(
-      baseInfo.recording.triggeredAt,
-      MIN_RECORDING_DURATION_IN_MINUTES,
-    ),
-  );
+
+  const laterDate =
+    minimumRecordingTime > halfIntervalTime
+      ? minimumRecordingTime
+      : halfIntervalTime;
+
+  const canGetRecording = isAfter(now, laterDate);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
-        <Button type="button" disabled={!isOverHalf || isOver10Minutes}>
-          {(() => {
-            if (isOverHalf) return '여기까지 가져가기';
-            if (isOver10Minutes) return '10분 이상 녹화해야 해요';
-            return `${halfRecordingTime.getMinutes()}분 부터 가져갈 수 있어요`;
-          })()}
+        <Button
+          type="button"
+          disabled={!canGetRecording}
+          variant="solid"
+          size="3"
+        >
+          {canGetRecording
+            ? '여기까지 가져가기'
+            : `${laterDate.getMinutes()}분 부터 가져갈 수 있어요`}
         </Button>
       </Dialog.Trigger>
       <Dialog.Content>

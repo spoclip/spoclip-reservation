@@ -49,24 +49,25 @@ function RecordingCancelButton() {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
-        <Button variant="soft" color="red">
+        <Button variant="soft" color="red" size="3">
           녹화 취소
         </Button>
       </Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Title>녹화 취소</Dialog.Title>
+
         <Dialog.Description>
-          악의적으로 녹화를 취소할 시 불이익을 받을 수 있어요.
+          악의적으로 녹화를 취소시 불이익을 받아요.
           <br />
           정말 녹화를 취소하시겠습니까?
         </Dialog.Description>
-        <Flex justify="end" gap="2">
+        <Flex justify="end" gap="2" mt="4">
           <Dialog.Close>
-            <Button variant="soft" color="gray" size="4">
+            <Button variant="soft" color="gray" size="3">
               닫기
             </Button>
           </Dialog.Close>
-          <Button variant="soft" color="red" size="4" onClick={onClick}>
+          <Button variant="soft" color="red" size="3" onClick={onClick}>
             녹화 취소하기
           </Button>
         </Flex>

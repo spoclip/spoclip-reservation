@@ -30,7 +30,7 @@ const queryClient = new QueryClient({
       onError: (error) => {
         const isAxiosError = error instanceof AxiosError;
         const errorMessage = isAxiosError
-          ? error.response?.data.message
+          ? error.response?.data.error.message
           : error.message;
         toast.error(errorMessage ?? '알 수 없는 에러 발생');
       },
