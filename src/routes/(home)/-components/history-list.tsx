@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { useSuspenseQuery } from '@tanstack/react-query';
 import {
   Box,
@@ -5,6 +7,7 @@ import {
   Card,
   Dialog,
   Flex,
+  Skeleton,
   Text,
   TextField,
 } from '@radix-ui/themes';
@@ -27,6 +30,21 @@ import { useManualNow } from '@/stores/now';
 import { formatPhoneNumber } from '@/libs/phone-validation';
 
 function HistoryList() {
+  return (
+    <Suspense
+      fallback={
+        <Flex direction="column" gap="2">
+          <HistoryItemSkeleton />
+          <HistoryItemSkeleton />
+        </Flex>
+      }
+    >
+      <HistoryListContent />
+    </Suspense>
+  );
+}
+
+function HistoryListContent() {
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
   const { data } = useSuspenseQuery(
     getCompletedRecordingQuery({
@@ -77,6 +95,18 @@ function HistoryItem({
           <ExpirationTime expiresAt={item.expiresAt} />
           <SendToMeDialogButton uuid={item.uuid} />
         </Flex>
+      </Flex>
+    </Card>
+  );
+}
+
+function HistoryItemSkeleton() {
+  return (
+    <Card>
+      <Flex direction="column" gap="2">
+        <Skeleton width="200px" height="20px" />
+        <Skeleton width="100px" height="20px" />
+        <Skeleton width="140px" height="20px" />
       </Flex>
     </Card>
   );
