@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { useCompleteRecordingMutation } from '@/services/recording/query';
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { HomeRoute } from '@/libs/routes';
-import { mobilePhoneSchema } from '@/libs/phone-validation';
+import { formatPhoneNumber, mobilePhoneSchema } from '@/libs/phone-validation';
 import { recordingQueryKeys } from '@/services/recording';
 import { MIN_RECORDING_DURATION_IN_MINUTES } from '@/constants/recording';
 import { useIntervalNow } from '@/hooks/use-now';
@@ -104,9 +104,15 @@ function RecordingCompleteButton() {
               render={({ field, fieldState }) => (
                 <Flex gap="2" direction="column">
                   <TextField.Root
+                    type="tel"
                     size="3"
+                    maxLength={13}
                     {...field}
-                    placeholder="전화번호를 입력해주세요"
+                    placeholder="휴대폰 번호"
+                    onChange={(e) => {
+                      const value = e.currentTarget.value;
+                      field.onChange(formatPhoneNumber(value));
+                    }}
                   >
                     <TextField.Slot>
                       <Smartphone />
