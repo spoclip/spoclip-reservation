@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button, Container, Flex, IconButton } from '@radix-ui/themes';
 import { MenuIcon, XIcon } from 'lucide-react';
@@ -9,8 +9,32 @@ import { logo } from '@/assets';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        e.target instanceof HTMLElement &&
+        !headerContainerRef.current?.contains(e.target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, []);
+
   return (
-    <Container p="3" className={s.headerContainer} maxWidth="600px">
+    <Container
+      p="3"
+      className={s.headerContainer}
+      maxWidth="600px"
+      ref={headerContainerRef}
+    >
       <header className={s.header}>
         <Flex justify="between" align="center">
           <img src={logo} alt="logo" width={120} />
