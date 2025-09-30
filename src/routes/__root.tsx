@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { Box, Container, Text } from '@radix-ui/themes';
 import {
   Outlet,
@@ -10,6 +12,7 @@ import { z } from 'zod/v3';
 
 import { MOCK_COURT_UUID, MOCK_GYM_UUID } from '@/mock';
 import Header from '@/components/common/header';
+import { useAutoInvalidation } from '@/hooks/use-auto-invalidation';
 
 const searchSchema = z.object({
   // @todo. default value should be removed
@@ -31,8 +34,23 @@ function Root() {
         <Outlet />
         <TanStackRouterDevtools />
       </Container>
+      <Suspense>
+        <CheckInterval />
+      </Suspense>
     </>
   );
+}
+
+/**
+ * 자동 쿼리 무효화를 담당하는 컴포넌트
+ *
+ * 다음 조건에서 recording 쿼리를 자동으로 무효화합니다:
+ * - 운영 시간 외: 운영 시작 시간이 지났을 때
+ * - 운영 시간 내: 녹화 종료 시간이 지났을 때
+ */
+function CheckInterval() {
+  useAutoInvalidation();
+  return null;
 }
 
 function ErrorComponent({ error }: { error: Error }) {

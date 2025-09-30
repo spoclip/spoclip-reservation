@@ -1,30 +1,19 @@
 import { memo } from 'react';
 
 import { Callout } from '@radix-ui/themes';
-import { formatDate, isAfter } from 'date-fns';
+import { formatDate } from 'date-fns';
 import { AlertCircle } from 'lucide-react';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
-import { isOverHalfInterval } from '@/libs/recording';
-import { useManualNow } from '@/stores/now';
 
 export default memo(function RecordingInfo() {
-  const { now } = useManualNow();
-  const { gym, court, currentRecordingEndDate, baseInfo } =
+  const { currentRecordingEndDate, baseInfo, outOfOperatingTime, isOverHalf } =
     useRecordingInfoQuery();
-
-  const isAfterOperationEnd = isAfter(now, currentRecordingEndDate);
-  const isOverHalf = isOverHalfInterval({
-    now,
-    recordingIntervalInMinute: court.recordingInterval,
-    operatingStartHour: gym.todayOperatingTime.openHour,
-    operatingEndHour: gym.todayOperatingTime.closeHour,
-  });
 
   return (
     <>
       {(() => {
-        if (isAfterOperationEnd) {
+        if (outOfOperatingTime) {
           return (
             <Callout.Root color="red">
               <Callout.Icon>

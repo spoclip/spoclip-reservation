@@ -15,6 +15,7 @@ import HistoryList from './-components/history-list';
 import RecordingCancelButton from './-components/recording-cancel-button';
 import RecordingButton from './-components/recording-button';
 import RecordingCompleteButton from './-components/recording-complete-button';
+import Clock from './-components/clock';
 
 const searchSchema = z.object({
   sendToMeDialogId: z.string().optional(),
@@ -29,12 +30,15 @@ function RouteComponent() {
   return (
     <ReservationFormProvider>
       <Flex direction="column">
-        <Section size="1">
-          <Flex direction="column" gap="3">
-            <Heading as="h2" size="4">
-              체육관 정보
-            </Heading>
-            <GymInfo />
+        <Section size="1" position="relative">
+          <Flex justify="between">
+            <Flex direction="column" gap="3">
+              <Heading as="h2" size="4">
+                체육관 정보
+              </Heading>
+              <GymInfo />
+            </Flex>
+            <Clock />
           </Flex>
         </Section>
 

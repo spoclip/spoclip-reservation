@@ -3,6 +3,7 @@ import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 import {
   getCurrentRecordingEndDate,
   getCurrentRecordingStartDate,
+  isOverHalfInterval,
 } from '@/libs/recording';
 import { HomeRoute } from '@/libs/routes';
 import { getCourtQuery, getGymQuery } from '@/services/gym';
@@ -40,11 +41,24 @@ export function useRecordingInfoQuery() {
     }),
   );
 
+  const outOfOperatingTime =
+    now.getHours() < gym.todayOperatingTime.openHour ||
+    now.getHours() > gym.todayOperatingTime.closeHour;
+
+  const isOverHalf = isOverHalfInterval({
+    now,
+    recordingIntervalInMinute: court.recordingInterval,
+    operatingStartHour: gym.todayOperatingTime.openHour,
+    operatingEndHour: gym.todayOperatingTime.closeHour,
+  });
+
   return {
     gym,
     court,
     baseInfo,
     currentRecordingStartDate,
     currentRecordingEndDate,
+    outOfOperatingTime,
+    isOverHalf,
   };
 }
