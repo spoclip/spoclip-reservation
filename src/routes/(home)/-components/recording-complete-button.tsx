@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Smartphone } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { addMinutes } from 'date-fns';
+import { toast } from 'sonner';
 
 import { useCompleteRecordingMutation } from '@/services/recording/query';
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
@@ -51,6 +52,7 @@ function RecordingCompleteButton() {
             queryKey: recordingQueryKeys.all,
           });
           setIsOpen(false);
+          toast.success('영상 가져가기 성공');
         },
       },
     );

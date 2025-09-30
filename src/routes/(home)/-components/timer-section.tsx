@@ -7,7 +7,7 @@ import { useNow } from '@/hooks/use-now';
 export default function Timer() {
   const { outOfOperatingTime, baseInfo, isOverHalf } = useRecordingInfoQuery();
 
-  if (!baseInfo?.isRecording && !isOverHalf) return null;
+  if (!baseInfo?.isRecording && isOverHalf) return null;
   if (outOfOperatingTime) return null;
 
   return (
