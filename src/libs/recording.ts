@@ -62,8 +62,9 @@ export function getCurrentRecordingStartDate({
   let currentRecordingStartDate: Date | null = operationStartDate;
 
   while (
-    isSameSecond(now, currentRecordingStartDate) ||
-    isAfter(now, currentRecordingStartDate)
+    (isSameSecond(now, currentRecordingStartDate) ||
+      isAfter(now, currentRecordingStartDate)) &&
+    isAfter(currentRecordingStartDate, operationEndDate)
   ) {
     currentRecordingStartDate = addMinutes(
       currentRecordingStartDate,

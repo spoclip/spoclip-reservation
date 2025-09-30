@@ -1,0 +1,1 @@
+export const MIN_RECORDING_DURATION_IN_MINUTES = 10;

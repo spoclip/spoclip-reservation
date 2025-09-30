@@ -2,7 +2,7 @@ import { Flex, Text } from '@radix-ui/themes';
 import { formatDate } from 'date-fns';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
-import { useNow } from '@/hooks/use-now';
+import { useIntervalNow } from '@/hooks/use-now';
 
 export default function Timer() {
   const { outOfOperatingTime, baseInfo, isOverHalf } = useRecordingInfoQuery();
@@ -32,7 +32,7 @@ function StartTimer() {
 }
 
 function NowTimer() {
-  const { now } = useNow({ interval: 1000 });
+  const { now } = useIntervalNow({ interval: 1000 });
   return (
     <Text size="6" weight="bold">
       {formatDate(now, 'HH시 mm분')}

@@ -6,7 +6,7 @@ import { z } from 'zod/v3';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Smartphone } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { addMinutes } from 'date-fns';
+import { addMinutes, isAfter } from 'date-fns';
 import { toast } from 'sonner';
 
 import { useCompleteRecordingMutation } from '@/services/recording/query';
@@ -14,6 +14,8 @@ import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-
 import { HomeRoute } from '@/libs/routes';
 import { mobilePhoneSchema } from '@/libs/phone-validation';
 import { recordingQueryKeys } from '@/services/recording';
+import { MIN_RECORDING_DURATION_IN_MINUTES } from '@/constants/recording';
+import { useIntervalNow } from '@/hooks/use-now';
 
 const formSchema = z.object({
   phoneNumber: mobilePhoneSchema,
@@ -24,6 +26,7 @@ function RecordingCompleteButton() {
   const [isOpen, setIsOpen] = useState(false);
   const { baseInfo, court, isOverHalf, currentRecordingStartDate } =
     useRecordingInfoQuery();
+  const { now } = useIntervalNow();
 
   const { gymUuid, courtUuid } = HomeRoute.useSearch();
   const { control, handleSubmit } = useForm<FormSchema>({
@@ -58,20 +61,29 @@ function RecordingCompleteButton() {
     );
   };
 
+  if (!baseInfo?.isRecording) return null;
+
   const halfRecordingTime = addMinutes(
     currentRecordingStartDate,
     court.recordingInterval / 2,
   );
-
-  if (!baseInfo?.isRecording) return null;
+  const isOver10Minutes = isAfter(
+    now,
+    addMinutes(
+      baseInfo.recording.triggeredAt,
+      MIN_RECORDING_DURATION_IN_MINUTES,
+    ),
+  );
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
-        <Button type="button" disabled={!isOverHalf}>
-          {isOverHalf
-            ? '여기까지 가져가기'
-            : `${halfRecordingTime.getMinutes()}분 부터 가져갈 수 있어요`}
+        <Button type="button" disabled={!isOverHalf || isOver10Minutes}>
+          {(() => {
+            if (isOverHalf) return '여기까지 가져가기';
+            if (isOver10Minutes) return '10분 이상 녹화해야 해요';
+            return `${halfRecordingTime.getMinutes()}분 부터 가져갈 수 있어요`;
+          })()}
         </Button>
       </Dialog.Trigger>
       <Dialog.Content>

@@ -2,10 +2,10 @@ import { formatDate } from 'date-fns';
 import { ClockIcon } from 'lucide-react';
 import { Flex, Text } from '@radix-ui/themes';
 
-import { useNow } from '@/hooks/use-now';
+import { useIntervalNow } from '@/hooks/use-now';
 
 function Clock() {
-  const { now } = useNow();
+  const { now } = useIntervalNow();
   return (
     <Flex align="center" gap="2" justify="center">
       <DynamicClockIcon />

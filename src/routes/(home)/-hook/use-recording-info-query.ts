@@ -46,7 +46,7 @@ export function useRecordingInfoQuery() {
 
   const outOfOperatingTime =
     now.getHours() < gym.todayOperatingTime.openHour ||
-    now.getHours() > gym.todayOperatingTime.closeHour;
+    now.getHours() >= gym.todayOperatingTime.closeHour;
 
   const isOverHalf = isOverHalfInterval({
     now,

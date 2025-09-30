@@ -30,15 +30,18 @@ export function useAutoInvalidation() {
   useEffect(() => {
     function shouldInvalidateQueries(now: Date): boolean {
       if (outOfOperatingTime) {
-        return isAfterOperatingStartTime(now);
+        const lastInvalidationTimeHour =
+          lastInvalidationTime.current.getHours();
+
+        const isUpdated =
+          lastInvalidationTimeHour < gym.todayOperatingTime.openHour ||
+          lastInvalidationTimeHour >= gym.todayOperatingTime.closeHour;
+
+        const nowHour = now.getHours();
+        return nowHour > gym.todayOperatingTime.openHour && !isUpdated;
       }
 
       return isAfterRecordingEndTime(now) || isAfterHalfRecordingTime(now);
-    }
-
-    function isAfterOperatingStartTime(now: Date): boolean {
-      const nowHour = now.getHours();
-      return nowHour > gym.todayOperatingTime.openHour;
     }
 
     function isAfterRecordingEndTime(now: Date): boolean {

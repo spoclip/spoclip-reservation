@@ -1,11 +1,8 @@
 import { Flex, Text } from '@radix-ui/themes';
 import { Callout } from '@radix-ui/themes/src/index.js';
-import { useSuspenseQueries } from '@tanstack/react-query';
 import { Clock, MapPin } from 'lucide-react';
 
-import { getCourtQuery, getGymQuery } from '@/services/gym/query';
-import { OperationDay } from '@/services/gym/enum';
-import { HomeRoute } from '@/libs/routes';
+import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 
 export default function GymInfo() {
   return (
@@ -24,14 +21,7 @@ function GymInfoSectionWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function GymInfoSectionContent() {
-  const { gymUuid, courtUuid } = HomeRoute.useSearch();
-  const [{ data: gym }, { data: court }] = useSuspenseQueries({
-    queries: [getGymQuery({ gymUuid }), getCourtQuery({ courtUuid })],
-  });
-
-  const operationHour = gym.operatingHours.find(
-    (hour) => hour.day === OperationDay.MONDAY,
-  );
+  const { gym, court } = useRecordingInfoQuery();
 
   return (
     <>
@@ -48,7 +38,8 @@ function GymInfoSectionContent() {
           <Clock size={14} />
         </Callout.Icon>
         <Text size="2">
-          영업 시간: {operationHour?.openTime} ~{operationHour?.closeTime}
+          영업 시간: {gym.todayOperatingTime.openTime} ~
+          {gym.todayOperatingTime.closeTime}
         </Text>
       </Flex>
     </>

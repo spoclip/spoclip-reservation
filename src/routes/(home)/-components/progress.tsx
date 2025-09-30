@@ -2,10 +2,10 @@ import { Progress } from '@radix-ui/themes';
 import { differenceInSeconds } from 'date-fns';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
-import { useNow } from '@/hooks/use-now';
+import { useIntervalNow } from '@/hooks/use-now';
 
 function RecordingProgress() {
-  const { now } = useNow();
+  const { now } = useIntervalNow();
   const { baseInfo, currentRecordingEndDate } = useRecordingInfoQuery();
 
   if (!baseInfo?.isRecording) return null;
