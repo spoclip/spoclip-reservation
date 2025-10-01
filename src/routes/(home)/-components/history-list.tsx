@@ -28,6 +28,7 @@ import {
 } from '@/services/recording/query';
 import { useManualNow } from '@/stores/now';
 import { formatPhoneNumber } from '@/libs/phone-validation';
+import { useIntervalNow } from '@/hooks/use-now';
 
 function HistoryList() {
   return (
@@ -113,7 +114,7 @@ function HistoryItemSkeleton() {
 }
 
 function ExpirationTime({ expiresAt }: { expiresAt: string }) {
-  const { now } = useManualNow();
+  const { now } = useIntervalNow();
   const expirationTime = formatTimeUntilExpiration(new Date(expiresAt), now);
 
   return (

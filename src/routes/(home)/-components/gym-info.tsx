@@ -1,6 +1,6 @@
 import { Flex, Text } from '@radix-ui/themes';
 import { Callout } from '@radix-ui/themes/src/index.js';
-import { Clock, MapPin } from 'lucide-react';
+import { Clock, MapPin, Video } from 'lucide-react';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 
@@ -25,22 +25,22 @@ function GymInfoSectionContent() {
 
   return (
     <>
-      <Flex gap="2">
-        <Callout.Icon>
-          <MapPin size={14} />
-        </Callout.Icon>
+      <Flex gap="2" align="center">
+        <MapPin size={14} />
         <Text size="2">
           {gym.krName}, {court.alias}
         </Text>
       </Flex>
-      <Flex gap="2">
-        <Callout.Icon>
-          <Clock size={14} />
-        </Callout.Icon>
+      <Flex gap="2" align="center">
+        <Clock size={14} />
         <Text size="2">
           영업 시간: {gym.todayOperatingTime.openTime} ~
           {gym.todayOperatingTime.closeTime}
         </Text>
+      </Flex>
+      <Flex gap="2" align="center">
+        <Video size={14} />
+        <Text size="2">녹화 단위: {court.recordingInterval}분</Text>
       </Flex>
     </>
   );
