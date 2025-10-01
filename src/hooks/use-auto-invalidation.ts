@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { addMinutes, isAfter } from 'date-fns';
+import { addMinutes, isAfter, isBefore } from 'date-fns';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { useManualNow } from '@/stores/now';
@@ -45,20 +45,21 @@ export function useAutoInvalidation() {
         court.recordingInterval / 2,
       );
 
-      if (isAfter(now, halfRecordingTime)) {
-        const isUpdated = isAfter(
-          lastInvalidationTime.current,
-          halfRecordingTime,
-        );
+      if (isBefore(now, halfRecordingTime)) {
+        const isUpdated =
+          isAfter(lastInvalidationTime.current, currentRecordingStartDate) &&
+          isBefore(lastInvalidationTime.current, halfRecordingTime);
         return !isUpdated;
       }
 
-      const isUpdated = isAfter(
-        lastInvalidationTime.current,
-        currentRecordingEndDate,
-      );
+      if (isAfter(now, halfRecordingTime)) {
+        const isUpdated =
+          isAfter(lastInvalidationTime.current, halfRecordingTime) &&
+          isBefore(lastInvalidationTime.current, currentRecordingEndDate);
+        return !isUpdated;
+      }
 
-      return !isUpdated;
+      return false;
     }
 
     function invalidateRecordingQueries(): void {

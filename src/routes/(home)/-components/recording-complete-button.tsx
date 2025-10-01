@@ -6,7 +6,7 @@ import { z } from 'zod/v3';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Smartphone } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { addMinutes, isAfter } from 'date-fns';
+import { addMinutes, isAfter, set } from 'date-fns';
 import { toast } from 'sonner';
 
 import { useCompleteRecordingMutation } from '@/services/recording/query';
@@ -41,12 +41,15 @@ function RecordingCompleteButton() {
 
   const onSubmit = (data: FormSchema) => {
     if (!baseInfo) return;
+
+    const flooredTriggerdAt = set(new Date(), { seconds: 0, milliseconds: 0 });
+
     mutate(
       {
         uuid: baseInfo.recording.uuid,
         gymUuid,
         courtUuid,
-        triggeredAt: new Date().toISOString(),
+        triggeredAt: flooredTriggerdAt.toISOString(),
         phoneNumber: data.phoneNumber.replaceAll(' ', ''),
       },
       {

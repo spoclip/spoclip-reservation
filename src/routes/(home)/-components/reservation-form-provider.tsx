@@ -1,5 +1,6 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { set } from 'date-fns';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
@@ -63,13 +64,15 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
       operatingEndHour: operatingEndHour,
     });
 
+    const flooredTriggerdAt = set(now, { seconds: 0, milliseconds: 0 });
+
     const requestData: CreateRecordingRequest = {
       date: now.toISOString(),
       startTime: currentRecordingStartDate.toISOString(),
       endTime: currentRecordingEndDate.toISOString(),
       gymUuid,
       courtUuid,
-      triggeredAt: now.toISOString(),
+      triggeredAt: flooredTriggerdAt.toISOString(),
       phoneNumber: data.phoneNumber.replaceAll(' ', ''),
     };
     createRecording(requestData, {
