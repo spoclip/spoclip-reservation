@@ -169,11 +169,14 @@ function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
 
   const onDialogOpenChange = (open: boolean) => {
     if (open) {
-      navigate({ to: '.', search: { sendToMeDialogId: uuid } });
+      navigate({
+        to: '.',
+        search: (prev) => ({ ...prev, sendToMeDialogId: uuid }),
+      });
     } else {
       navigate({
         to: '.',
-        search: { sendToMeDialogId: undefined },
+        search: (prev) => ({ ...prev, sendToMeDialogId: undefined }),
         replace: true,
       });
     }

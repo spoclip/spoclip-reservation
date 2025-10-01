@@ -37,29 +37,28 @@ export function useAutoInvalidation() {
           lastInvalidationTimeHour < gym.todayOperatingTime.openHour ||
           lastInvalidationTimeHour >= gym.todayOperatingTime.closeHour;
 
-        const nowHour = now.getHours();
-        return nowHour > gym.todayOperatingTime.openHour && !isUpdated;
+        return !isUpdated;
       }
 
-      return isAfterRecordingEndTime(now) || isAfterHalfRecordingTime(now);
-    }
-
-    function isAfterRecordingEndTime(now: Date): boolean {
-      return isAfter(now, currentRecordingEndDate);
-    }
-
-    function isAfterHalfRecordingTime(now: Date): boolean {
       const halfRecordingTime = addMinutes(
         currentRecordingStartDate,
         court.recordingInterval / 2,
       );
 
+      if (isAfter(now, halfRecordingTime)) {
+        const isUpdated = isAfter(
+          lastInvalidationTime.current,
+          halfRecordingTime,
+        );
+        return !isUpdated;
+      }
+
       const isUpdated = isAfter(
         lastInvalidationTime.current,
-        halfRecordingTime,
+        currentRecordingEndDate,
       );
 
-      return isAfter(now, halfRecordingTime) && !isUpdated;
+      return !isUpdated;
     }
 
     function invalidateRecordingQueries(): void {
