@@ -1,4 +1,4 @@
-import { OperationDay } from './enum';
+import { OperatingDay } from './enum';
 
 import type { ApiResponse } from '@/types/api';
 
@@ -16,7 +16,7 @@ export type GetGymResponse = ApiResponse<{
   managerName: string;
   address: string;
   operatingHours: {
-    day: OperationDay;
+    day: OperatingDay;
     openTime: string;
     closeTime: string;
   }[];

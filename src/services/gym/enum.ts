@@ -1,4 +1,4 @@
-export enum OperationDay {
+export enum OperatingDay {
   MONDAY = 'MONDAY',
   TUESDAY = 'TUESDAY',
   WEDNESDAY = 'WEDNESDAY',
@@ -8,12 +8,12 @@ export enum OperationDay {
   SUNDAY = 'SUNDAY',
 }
 
-export const OperationDays = [
-  OperationDay.SUNDAY,
-  OperationDay.MONDAY,
-  OperationDay.TUESDAY,
-  OperationDay.WEDNESDAY,
-  OperationDay.THURSDAY,
-  OperationDay.FRIDAY,
-  OperationDay.SATURDAY,
+export const OperatingDays = [
+  OperatingDay.SUNDAY,
+  OperatingDay.MONDAY,
+  OperatingDay.TUESDAY,
+  OperatingDay.WEDNESDAY,
+  OperatingDay.THURSDAY,
+  OperatingDay.FRIDAY,
+  OperatingDay.SATURDAY,
 ];

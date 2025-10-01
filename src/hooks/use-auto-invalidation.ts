@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { addMinutes, isAfter, isBefore } from 'date-fns';
+import { addMinutes, isAfter, isBefore, set } from 'date-fns';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import { useManualNow } from '@/stores/now';
 import { recordingQueryKeys } from '@/services/recording';
+import { OperatingDays } from '@/services/gym/enum';
 
 /**
  * 특정 조건에 따라 자동으로 쿼리를 무효화하는 훅
@@ -29,21 +30,33 @@ export function useAutoInvalidation() {
 
   useEffect(() => {
     function shouldInvalidateQueries(now: Date): boolean {
-      if (outOfOperatingTime) {
-        const lastInvalidationTimeHour =
-          lastInvalidationTime.current.getHours();
-
-        const isUpdated =
-          lastInvalidationTimeHour < gym.todayOperatingTime.openHour ||
-          lastInvalidationTimeHour >= gym.todayOperatingTime.closeHour;
-
-        return !isUpdated;
-      }
-
+      const day = now.getDay();
+      const todayOperatingTime = gym.operatingHours.find(
+        (hour) => hour.day === OperatingDays[day],
+      );
+      const openHour = Number(todayOperatingTime?.openTime.split(':')[0]);
+      const closeHour = Number(todayOperatingTime?.closeTime.split(':')[0]);
+      const openDate = set(new Date(now), {
+        hours: openHour,
+      });
+      const closeDate = set(new Date(now), {
+        hours: closeHour,
+      });
       const halfRecordingTime = addMinutes(
         currentRecordingStartDate,
         court.recordingInterval / 2,
       );
+
+      if (isBefore(now, openDate) || isAfter(now, closeDate)) {
+        const lastInvalidationTimeHour =
+          lastInvalidationTime.current.getHours();
+
+        const isUpdated =
+          lastInvalidationTimeHour < openHour ||
+          lastInvalidationTimeHour >= closeHour;
+
+        return !isUpdated;
+      }
 
       if (isBefore(now, halfRecordingTime)) {
         const isUpdated =

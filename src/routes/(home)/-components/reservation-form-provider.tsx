@@ -14,7 +14,7 @@ import {
   getCurrentRecordingEndDate,
   getCurrentRecordingStartDate,
 } from '@/libs/recording';
-import { OperationDays } from '@/services/gym/enum';
+import { OperatingDays } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
 import { recordingQueryKeys } from '@/services/recording';
 import { useManualNow } from '@/stores/now';
@@ -45,7 +45,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
     const now = new Date();
 
     const operationHour = gym.operatingHours.find(
-      (hour) => hour.day === OperationDays[now.getDay()],
+      (hour) => hour.day === OperatingDays[now.getDay()],
     );
     const operatingStartHour = Number(operationHour?.openTime.split(':')[0]);
     const operatingEndHour = Number(operationHour?.closeTime.split(':')[0]);

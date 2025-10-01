@@ -1,7 +1,7 @@
 import { addMinutes, isAfter, subMinutes } from 'date-fns';
 
 import type { GetGymResponse } from '@/services/gym';
-import { OperationDays } from '@/services/gym/enum';
+import { OperatingDays } from '@/services/gym/enum';
 
 export function getCurrentRecordingEndDate({
   now,
@@ -90,7 +90,7 @@ export function parseOperationHour(
   operationHours: GetGymResponse['data']['operatingHours'],
 ) {
   const now = new Date();
-  const today = OperationDays[now.getDay()];
+  const today = OperatingDays[now.getDay()];
   const todayOperatingTime = operationHours.find((hour) => hour.day === today);
 
   if (!todayOperatingTime) {
