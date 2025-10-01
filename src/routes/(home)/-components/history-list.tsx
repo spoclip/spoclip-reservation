@@ -26,7 +26,6 @@ import {
   getCompletedRecordingQuery,
   useSendToMeRecordingMutation,
 } from '@/services/recording/query';
-import { useManualNow } from '@/stores/now';
 import { formatPhoneNumber } from '@/libs/phone-validation';
 import { useIntervalNow } from '@/hooks/use-now';
 
@@ -159,7 +158,7 @@ function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
         onSuccess: () => {
           navigate({
             to: '.',
-            search: { sendToMeDialogId: undefined },
+            search: (prev) => ({ ...prev, sendToMeDialogId: undefined }),
             replace: true,
           });
           toast.success('나에게 보내기 성공!');

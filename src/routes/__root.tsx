@@ -8,13 +8,11 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { zodValidator } from '@tanstack/zod-adapter';
 import { z } from 'zod/v3';
 
-import { MOCK_COURT_UUID, MOCK_GYM_UUID } from '@/mock';
 import Header from '@/components/common/header';
 
 const searchSchema = z.object({
-  // @todo. default value should be removed
-  gymUuid: z.string().default(MOCK_GYM_UUID),
-  courtUuid: z.string().default(MOCK_COURT_UUID),
+  gymUuid: z.string(),
+  courtUuid: z.string(),
 });
 
 export const Route = createRootRoute({

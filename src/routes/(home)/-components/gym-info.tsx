@@ -1,5 +1,4 @@
 import { Flex, Text } from '@radix-ui/themes';
-import { Callout } from '@radix-ui/themes/src/index.js';
 import { Clock, MapPin, Video } from 'lucide-react';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
