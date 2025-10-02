@@ -5,6 +5,7 @@ import type {
 
 export const recordingQueryKeys = {
   all: ['recording'] as const,
+  completedList: () => [...recordingQueryKeys.all, 'completed'] as const,
   completed: (params: GetCompletedRecordingRequest) =>
     [
       ...recordingQueryKeys.all,

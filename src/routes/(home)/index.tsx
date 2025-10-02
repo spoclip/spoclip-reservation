@@ -8,6 +8,7 @@ import { z } from 'zod/v3';
 import { GymSection } from './-components/sections/gmy-info-section';
 import { RecordingSection } from './-components/sections/recording-section';
 import { RecordingHistorySection } from './-components/sections/recording-history-section';
+import { useSseEvent } from './-hook/use-sse-event';
 
 import { useAutoInvalidation } from '@/hooks/use-auto-invalidation';
 
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/(home)/')({
 });
 
 function RouteComponent() {
+  useSseEvent();
   return (
     <>
       <Flex direction="column">
