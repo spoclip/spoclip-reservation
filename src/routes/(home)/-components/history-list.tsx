@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import {
   Box,
   Button,
@@ -28,6 +28,7 @@ import {
 } from '@/services/recording/query';
 import { formatPhoneNumber } from '@/libs/phone-validation';
 import { useIntervalNow } from '@/hooks/use-now';
+import { recordingQueryKeys } from '@/services/recording';
 
 function HistoryList() {
   return (
@@ -145,6 +146,7 @@ function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
   );
 
   const { mutate } = useSendToMeRecordingMutation();
+  const queryClient = useQueryClient();
   const onSubmit = (data: z.infer<typeof sendToMeFormSchema>) => {
     mutate(
       {
@@ -162,6 +164,9 @@ function SendToMeDialogButton({ uuid }: SendToMeDialogButtonProps) {
             replace: true,
           });
           toast.success('나에게 보내기 성공!');
+          queryClient.invalidateQueries({
+            queryKey: recordingQueryKeys.completedList(),
+          });
         },
       },
     );

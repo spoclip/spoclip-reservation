@@ -1,4 +1,6 @@
-import { useEffect, useRef } from 'react';
+// todo. 테스트 후 주석 해제
+/* eslint-disable no-console */
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { addMinutes, isAfter, isBefore, set } from 'date-fns';
@@ -14,65 +16,82 @@ import { OperatingDays } from '@/services/gym/enum';
  * - 운영 시간 내: 녹화 종료 시간이 지나면 무효화
  */
 export function useAutoInvalidation() {
-  const {
-    currentRecordingEndDate,
-    gym,
-    outOfOperatingTime,
-    court,
-    currentRecordingStartDate,
-  } = useRecordingInfoQuery();
+  const { currentRecordingEndDate, gym, court } = useRecordingInfoQuery();
   const queryClient = useQueryClient();
-  const { updateNow } = useManualNow((state) => ({
+  const { now: manualNow, updateNow } = useManualNow((state) => ({
+    now: state.now,
     updateNow: state.updateNow,
   }));
 
   const lastInvalidationTime = useRef<Date>(new Date());
 
-  useEffect(() => {
-    function shouldInvalidateQueries(now: Date): boolean {
+  const getBoundaryDateList = useCallback(
+    function () {
+      const boundaryDateList: Date[] = [];
+      const now = new Date();
+
       const day = now.getDay();
       const todayOperatingTime = gym.operatingHours.find(
         (hour) => hour.day === OperatingDays[day],
       );
-      const openHour = Number(todayOperatingTime?.openTime.split(':')[0]);
-      const closeHour = Number(todayOperatingTime?.closeTime.split(':')[0]);
+      const [openHour, openMinute] =
+        todayOperatingTime?.openTime.split(':').map(Number) ?? [];
+      const [closeHour, closeMinute] =
+        todayOperatingTime?.closeTime.split(':').map(Number) ?? [];
       const openDate = set(new Date(now), {
         hours: openHour,
+        minutes: openMinute,
+        seconds: 0,
+        milliseconds: 0,
       });
       const closeDate = set(new Date(now), {
         hours: closeHour,
+        minutes: closeMinute,
+        seconds: 0,
+        milliseconds: 0,
       });
-      const halfRecordingTime = addMinutes(
-        currentRecordingStartDate,
-        court.recordingInterval / 2,
+
+      // get half recording time
+
+      let nextBoundary = openDate;
+      boundaryDateList.push(nextBoundary);
+      do {
+        nextBoundary = addMinutes(nextBoundary, court.recordingInterval / 2);
+        boundaryDateList.push(nextBoundary);
+      } while (isBefore(nextBoundary, closeDate));
+
+      return boundaryDateList;
+    },
+
+    [court.recordingInterval, gym.operatingHours],
+  );
+
+  useEffect(() => {
+    function shouldUpdateManualNow(now: Date): boolean {
+      const boundaryDateList = getBoundaryDateList();
+      const nextBoundary = boundaryDateList.find((date) =>
+        isBefore(manualNow, date),
       );
 
-      if (isBefore(now, openDate) || isAfter(now, closeDate)) {
-        const lastInvalidationTimeHour =
-          lastInvalidationTime.current.getHours();
+      const shouldInvalidate = Boolean(
+        nextBoundary &&
+          isAfter(now, nextBoundary) &&
+          isBefore(lastInvalidationTime.current, nextBoundary),
+      );
 
-        const isUpdated =
-          lastInvalidationTimeHour < openHour ||
-          lastInvalidationTimeHour >= closeHour;
-
-        return !isUpdated;
-      }
-
-      if (isBefore(now, halfRecordingTime)) {
-        const isUpdated =
-          isAfter(lastInvalidationTime.current, currentRecordingStartDate) &&
-          isBefore(lastInvalidationTime.current, halfRecordingTime);
-        return !isUpdated;
-      }
-
-      if (isAfter(now, halfRecordingTime)) {
-        const isUpdated =
-          isAfter(lastInvalidationTime.current, halfRecordingTime) &&
-          isBefore(lastInvalidationTime.current, currentRecordingEndDate);
-        return !isUpdated;
-      }
-
-      return false;
+      console.log('===============================================');
+      console.log(
+        '업데이트가 필요한 시점인가? ',
+        nextBoundary && isAfter(now, nextBoundary),
+      );
+      console.log(
+        '업데이트를 안했는가? ',
+        nextBoundary && isBefore(lastInvalidationTime.current, nextBoundary),
+      );
+      console.log('nextboundary', nextBoundary);
+      console.log('shouldInvalidate', shouldInvalidate);
+      console.log('===============================================');
+      return shouldInvalidate;
     }
 
     function invalidateRecordingQueries(): void {
@@ -84,7 +103,7 @@ export function useAutoInvalidation() {
     const interval = setInterval(() => {
       const now = new Date();
 
-      if (shouldInvalidateQueries(now)) {
+      if (shouldUpdateManualNow(now)) {
         invalidateRecordingQueries();
         updateNow();
         lastInvalidationTime.current = now;
@@ -95,10 +114,8 @@ export function useAutoInvalidation() {
   }, [
     currentRecordingEndDate,
     queryClient,
+    manualNow,
     updateNow,
-    gym,
-    outOfOperatingTime,
-    court,
-    currentRecordingStartDate,
+    getBoundaryDateList,
   ]);
 }
