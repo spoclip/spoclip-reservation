@@ -1,7 +1,7 @@
 import { Flex, Text } from '@radix-ui/themes';
 import { formatDate } from 'date-fns';
 
-import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
+import useRecordingTimeQuery from '@/routes/(home)/-hook/use-recording-time';
 
 export default function Timer() {
   return (
@@ -14,16 +14,16 @@ export default function Timer() {
 }
 
 function StartTimer() {
-  const { currentRecordingStartDate } = useRecordingInfoQuery();
-
+  const { currentRecordingStartDate } = useRecordingTimeQuery();
   return (
     <Text size="6" weight="bold">
       {formatDate(currentRecordingStartDate, 'HH시 mm분')}
     </Text>
   );
 }
+
 function EndTimer() {
-  const { currentRecordingEndDate } = useRecordingInfoQuery();
+  const { currentRecordingEndDate } = useRecordingTimeQuery();
 
   return (
     <Text size="6" weight="bold">

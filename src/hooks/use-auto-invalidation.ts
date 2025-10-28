@@ -1,5 +1,5 @@
 // todo. 테스트 후 주석 해제
-/* eslint-disable no-console */
+
 import { useCallback, useEffect, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -79,18 +79,6 @@ export function useAutoInvalidation() {
           isBefore(lastInvalidationTime.current, nextBoundary),
       );
 
-      console.log('===============================================');
-      console.log(
-        '업데이트가 필요한 시점인가? ',
-        nextBoundary && isAfter(now, nextBoundary),
-      );
-      console.log(
-        '업데이트를 안했는가? ',
-        nextBoundary && isBefore(lastInvalidationTime.current, nextBoundary),
-      );
-      console.log('nextboundary', nextBoundary);
-      console.log('shouldInvalidate', shouldInvalidate);
-      console.log('===============================================');
       return shouldInvalidate;
     }
 
