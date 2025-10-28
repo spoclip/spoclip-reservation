@@ -77,7 +77,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
         queryClient.invalidateQueries({
           queryKey: recordingQueryKeys.baseInfos(),
         });
-        toast.success('녹화 예약이 완료되었습니다.');
+        toast.success('녹화 요청이 완료되었습니다.');
         form.reset();
       },
     });
