@@ -1,9 +1,8 @@
-type ApiResponse<T> = {
-  data: T;
-  status: string;
-  code: number;
-  timestamp: string;
-  path: string;
-};
+import type { APIResponse } from 'spoclip-kit';
+
+/**
+ * @deprecated Use APIResponse from spoclip-kit module instead
+ */
+type ApiResponse<T> = APIResponse<T>;
 
 export type { ApiResponse };
