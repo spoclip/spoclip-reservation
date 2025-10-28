@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { Flex, Heading, Section, Skeleton } from '@radix-ui/themes';
 
 import Clock from '@/routes/(home)/-components/clock';
-import RecordingInfo from '@/routes/(home)/-components/recording-info';
 import Timer from '@/routes/(home)/-components/timer-section';
 import ReservationFormProvider from '@/routes/(home)/-components/reservation-form-provider';
 import PhoneNumberInputSection from '@/routes/(home)/-components/phone-number-input-section';
@@ -25,7 +24,6 @@ function RecordingSectionContent() {
           녹화
         </Heading>
         <Clock />
-        <RecordingInfo />
         <Timer />
 
         <ReservationFormProvider>
