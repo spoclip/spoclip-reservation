@@ -7,6 +7,7 @@ import Timer from '@/routes/(home)/-components/timer-section';
 import ReservationFormProvider from '@/routes/(home)/-components/reservation-form-provider';
 import PhoneNumberInputSection from '@/routes/(home)/-components/phone-number-input-section';
 import RecordingButton from '@/routes/(home)/-components/recording-button';
+import OutOfOperatingTimeCallout from '@/routes/(home)/-components/out-of-operating-time-callout';
 
 function RecordingSection() {
   return (
@@ -23,6 +24,7 @@ function RecordingSectionContent() {
         <Heading as="h2" size="4">
           녹화
         </Heading>
+        <OutOfOperatingTimeCallout />
         <Clock />
         <Timer />
 
