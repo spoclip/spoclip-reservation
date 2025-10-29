@@ -2,6 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { set } from 'date-fns';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import {
@@ -17,7 +18,6 @@ import {
 import { OperatingDays } from '@/services/gym/enum';
 import { HomeRoute } from '@/libs/routes';
 import { recordingQueryKeys } from '@/services/recording';
-import { useManualNow } from '@/stores/now';
 
 function ReservationFormProvider({ children }: { children: React.ReactNode }) {
   const { courtUuid, gymUuid } = HomeRoute.useSearch();
@@ -31,9 +31,6 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
 
   const { mutate: createRecording } = useCreateRecordingQuery();
   const queryClient = useQueryClient();
-  const { updateNow } = useManualNow((state) => ({
-    updateNow: state.updateNow,
-  }));
 
   const { court, gym } = useRecordingInfoQuery();
 
@@ -80,7 +77,8 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
         queryClient.invalidateQueries({
           queryKey: recordingQueryKeys.baseInfos(),
         });
-        updateNow();
+        toast.success('녹화 요청이 완료되었습니다.');
+        form.reset();
       },
     });
   };

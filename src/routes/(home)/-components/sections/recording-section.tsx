@@ -3,14 +3,11 @@ import { Suspense } from 'react';
 import { Flex, Heading, Section, Skeleton } from '@radix-ui/themes';
 
 import Clock from '@/routes/(home)/-components/clock';
-import RecordingInfo from '@/routes/(home)/-components/recording-info';
 import Timer from '@/routes/(home)/-components/timer-section';
-import RecordingProgress from '@/routes/(home)/-components/progress';
 import ReservationFormProvider from '@/routes/(home)/-components/reservation-form-provider';
 import PhoneNumberInputSection from '@/routes/(home)/-components/phone-number-input-section';
 import RecordingButton from '@/routes/(home)/-components/recording-button';
-import RecordingCancelButton from '@/routes/(home)/-components/recording-cancel-button';
-import RecordingCompleteButton from '@/routes/(home)/-components/recording-complete-button';
+import OutOfOperatingTimeCallout from '@/routes/(home)/-components/out-of-operating-time-callout';
 
 function RecordingSection() {
   return (
@@ -27,10 +24,9 @@ function RecordingSectionContent() {
         <Heading as="h2" size="4">
           녹화
         </Heading>
+        <OutOfOperatingTimeCallout />
         <Clock />
-        <RecordingInfo />
         <Timer />
-        <RecordingProgress />
 
         <ReservationFormProvider>
           <Flex direction="column" gap="2">
@@ -38,10 +34,6 @@ function RecordingSectionContent() {
             <RecordingButton />
           </Flex>
         </ReservationFormProvider>
-        <Flex gap="2" justify="end">
-          <RecordingCancelButton />
-          <RecordingCompleteButton />
-        </Flex>
       </Flex>
     </Section>
   );
