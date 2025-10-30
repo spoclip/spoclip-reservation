@@ -1,4 +1,4 @@
-import type { ApiResponse } from '@/types/api';
+import type { APIResponse } from 'spoclip-kit';
 
 export type CreateRecordingRequest = {
   gymUuid: string;
@@ -17,7 +17,7 @@ export type GetCompletedRecordingRequest = {
   triggeredAt: string;
 };
 
-export type GetCompletedRecordingResponse = ApiResponse<
+export type GetCompletedRecordingResponse = APIResponse<
   {
     uuid: string;
     date: string;
@@ -52,7 +52,7 @@ export type GetRecordingBaseInfoRequest = {
   date: string;
 };
 
-export type GetRecordingBaseInfoResponse = ApiResponse<{
+export type GetRecordingBaseInfoResponse = APIResponse<{
   isRecording: boolean;
   recording: {
     uuid: string;
@@ -74,7 +74,7 @@ export type CompleteRecordingRequest = {
   phoneNumber: string;
 };
 
-export type CompleteRecordingResponse = ApiResponse<{
+export type CompleteRecordingResponse = APIResponse<{
   uuid: string;
   date: string;
   startTime: string;

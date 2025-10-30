@@ -63,8 +63,8 @@ importers:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       spoclip-kit:
-        specifier: ^1.1.0
-        version: 1.1.0(typescript@5.8.3)
+        specifier: ^1.2.0
+        version: 1.2.0(typescript@5.8.3)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -2761,8 +2761,8 @@ packages:
     resolution: {integrity: sha512-i5uvt8C3ikiWeNZSVZNWcfZPItFQOsYTUAOkcUPGd8DqDy1uOUikjt5dG+uRlwyvR108Fb9DOd4GvXfT0N2/uQ==}
     engines: {node: '>= 12'}
 
-  spoclip-kit@1.1.0:
-    resolution: {integrity: sha512-5mjVXpQSdgsXWR/VJdUXOq39oXsg7LxI1+kgr24y3Ld6G14bDuLRn3FYKBCUBU7X+ZxQI/yAMvLkUEzVLhfkAg==}
+  spoclip-kit@1.2.0:
+    resolution: {integrity: sha512-utiuuxwghgl1nKayB1OfuKeYvbT8y4dq4hofFmifTUmo/tnUm6JPdVi/ICFdfUitevvaiD+jsu8Q8GouJf4T8g==}
     peerDependencies:
       typescript: '>=4.9.0'
 
@@ -5930,7 +5930,7 @@ snapshots:
 
   source-map@0.7.6: {}
 
-  spoclip-kit@1.1.0(typescript@5.8.3):
+  spoclip-kit@1.2.0(typescript@5.8.3):
     dependencies:
       typescript: 5.8.3
 

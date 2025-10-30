@@ -1,15 +1,18 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { set } from 'date-fns';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
+import { APIErrorResponse } from 'spoclip-kit';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 
 import { useRecordingInfoQuery } from '@/routes/(home)/-hook/use-recording-info-query';
 import {
   createRecordingFormSchema,
   type CreateRecordingFormSchema,
 } from '@/routes/(home)/-types/recording';
-import { useCreateRecordingQuery } from '@/services/recording/query';
+import { createRecordingMutationOptions } from '@/services/recording/query';
 import type { CreateRecordingRequest } from '@/services/recording/types';
 import {
   getCurrentRecordingEndDate,
@@ -29,8 +32,45 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
     mode: 'onChange',
   });
 
-  const { mutate: createRecording } = useCreateRecordingQuery();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const queryClient = useQueryClient();
+
+  const { mutate: createRecording } = useMutation({
+    ...createRecordingMutationOptions,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: recordingQueryKeys.baseInfos(),
+      });
+      toast.success('녹화 요청이 완료되었습니다.');
+      form.reset();
+    },
+
+    onError: (error) => {
+      const isAxiosErrorResponse = isAxiosError<APIErrorResponse>(error);
+
+      const errorMessage = isAxiosErrorResponse
+        ? error.response?.data.error.message
+        : error.message;
+
+      if (isAxiosErrorResponse && error.response?.data.code === 404) {
+        toast.error('스포클립 회원만 이용가능해요.', {
+          action: {
+            label: '회원가입 하기',
+            onClick: () => {
+              const loginPageUrl = new URL(`https://www.spoclip.ai`);
+              loginPageUrl.searchParams.set('prevPathInfo', location.url);
+              navigate({ href: loginPageUrl.toString() });
+            },
+          },
+        });
+        return;
+      }
+      toast.error(errorMessage);
+    },
+  });
 
   const { court, gym } = useRecordingInfoQuery();
 
@@ -72,15 +112,7 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
       triggeredAt: flooredTriggerdAt.toISOString(),
       phoneNumber: data.phoneNumber.replaceAll(' ', ''),
     };
-    createRecording(requestData, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: recordingQueryKeys.baseInfos(),
-        });
-        toast.success('녹화 요청이 완료되었습니다.');
-        form.reset();
-      },
-    });
+    createRecording(requestData);
   };
 
   return (
