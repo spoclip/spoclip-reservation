@@ -61,7 +61,10 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
             label: '회원가입 하기',
             onClick: () => {
               const loginPageUrl = new URL(`https://www.spoclip.ai`);
-              loginPageUrl.searchParams.set('prevPathInfo', location.url);
+              loginPageUrl.searchParams.set(
+                'prevPathInfo',
+                encodeURIComponent(location.url),
+              );
               navigate({ href: loginPageUrl.toString() });
             },
           },
