@@ -60,7 +60,9 @@ function ReservationFormProvider({ children }: { children: React.ReactNode }) {
           action: {
             label: '회원가입 하기',
             onClick: () => {
-              const loginPageUrl = new URL(`https://www.spoclip.ai`);
+              const loginPageUrl = new URL(
+                import.meta.env.VITE_SPOCLIP_SERVICE_FRONTEND_URL,
+              );
               loginPageUrl.searchParams.set(
                 'prevPathInfo',
                 encodeURIComponent(location.url),
