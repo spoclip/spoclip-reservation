@@ -10,6 +10,7 @@ import { z } from 'zod/v3';
 
 import Header from '@/components/common/header';
 import { IpRestrictionPage } from '@/components/common/ip-restriction-page';
+import { IS_ALLOWED_IP } from '@/constants/ip-mock';
 
 const searchSchema = z.object({
   gymUuid: z.string(),
@@ -23,13 +24,11 @@ export const Route = createRootRoute({
 });
 
 function Root() {
-  const IS_BLOCKED = true;
-
   return (
     <>
       <Header />
       <Container width="100%" maxWidth="600px" p="4" mt="7">
-        {IS_BLOCKED ? <IpRestrictionPage /> : <Outlet />}
+        {IS_ALLOWED_IP ? <IpRestrictionPage /> : <Outlet />}
         <TanStackRouterDevtools />
       </Container>
     </>
