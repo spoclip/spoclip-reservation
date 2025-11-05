@@ -9,6 +9,8 @@ import { zodValidator } from '@tanstack/zod-adapter';
 import { z } from 'zod/v3';
 
 import Header from '@/components/common/header';
+import { IpRestrictionPage } from '@/components/common/ip-restriction-page';
+import { IS_ALLOWED_IP } from '@/constants/ip-mock';
 
 const searchSchema = z.object({
   gymUuid: z.string(),
@@ -26,7 +28,7 @@ function Root() {
     <>
       <Header />
       <Container width="100%" maxWidth="600px" p="4" mt="7">
-        <Outlet />
+        {IS_ALLOWED_IP ? <IpRestrictionPage /> : <Outlet />}
         <TanStackRouterDevtools />
       </Container>
     </>

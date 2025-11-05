@@ -1,4 +1,8 @@
-import { queryOptions, useMutation } from '@tanstack/react-query';
+import {
+  mutationOptions,
+  queryOptions,
+  useMutation,
+} from '@tanstack/react-query';
 
 import {
   cancelRecording,
@@ -16,11 +20,9 @@ import type {
   SendToMeRecordingRequest,
 } from './types';
 
-export function useCreateRecordingQuery() {
-  return useMutation({
-    mutationFn: createRecording,
-  });
-}
+export const createRecordingMutationOptions = mutationOptions({
+  mutationFn: createRecording,
+});
 
 export function getCompletedRecordingQuery(
   params: GetCompletedRecordingRequest,
